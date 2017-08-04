@@ -1,6 +1,6 @@
-﻿# crt0,S(_main)代码分析
+﻿## crt0,S(_main)代码分析
 ---
-## 1. 设置sp寄存器地址
+### 1. 设置sp寄存器地址
 ``` C
 //设置SP栈指针
 #if defined(CONFIG_SPL_BUILD) && defined(CONFIG_SPL_STACK)
@@ -18,7 +18,7 @@
 	bic	sp, sp, #7	/* 8-byte alignment for ABI compliance */	
 #endif
 ```
-## 2. 在栈中为全局变量gd分配空间
+### 2. 在栈中为全局变量gd分配空间
 
 ```
 // r0寄存器传递函数的参数
@@ -43,7 +43,7 @@ ulong board_init_f_alloc_reserve(ulong top)
 	return top;
 }
 ```
-## 3. 在栈中gd空间清零
+### 3. 在栈中gd空间清零
 ```
 	mov	r9, r0	//将栈顶指针存到r9寄存器里面,方便后续设置gd指针
 	bl	board_init_f_init_reserve	//全局数据全部清零
@@ -93,7 +93,7 @@ void board_init_f_init_reserve(ulong base)
 }
 ```
 
-##4. 调用board_init_f，初始化各种硬件
+###4. 调用board_init_f，初始化各种硬件
 
 ```
 	mov	r0, #0
