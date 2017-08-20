@@ -4,7 +4,7 @@
 
 在嵌入式开发中，首先需要在主机上安装交叉编译工具。开发人员一般是在主机上进行编程，将编译好的程序传输到嵌入式开发板运行，因此需要与嵌入式平台相对应的编译工具，才能使编译好的程序在目标板上运行。
 
-我们使用Linaro GCC 作为交叉编译工具，它可以在[这里](http://releases.linaro.org/components/toolchain/binaries/latest/arm-linux-gnueabihf/)得到，这是已经编译好的二进制文件，解压后直接可以用。
+我们使用Linaro GCC 作为交叉编译工具，它可以在[这里](http://releases.linaro.org/components/toolchain/binaries/latest/arm-linux-gnueabihf/)得到，这是已经编译好的二进制文件，解压后直接可以用。官方网站下载很慢，我直接下载ti官网下载了。
 
 ```
 $ mkdir BBB     这里首先建立一个自己的目录
@@ -68,7 +68,7 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 - 将 $HOME/BBB/gcc-linaro-x.x.x-2017.x-x86_64_arm-linux-gnueabihf/bin加入到PATH里面，如下所示。
 
--  执行 source /etc/profile来激活环境变量更改
+-  reboot重启虚拟机来激活环境变量更改
 
 ```
 # .bash_profile 文件
@@ -86,17 +86,16 @@ export PATH
 
 ### 2. 编译内核树
 
-为了我们所编写的驱动可以在目标板上顺利运行，还需要编译目标板内核树。首先先获取源码，Beagle Black 开发板的源码可以在[这里](https://github.com/beagleboard/linux)下载，可以通过git命令下载源码。
+为了我们所编写的驱动可以在目标板上顺利运行，还需要编译目标板内核树。首先先获取源码，Beagle Black 开发板的源码可以直接去ti官方获取am335x的源码，或者beaglebone通过git命令下载源码,w我是直接下载的ti源码。
 
 ```
-$ git clone https://github.com/beagleboard/linux
-$ cd linux
-$ git checkout 4.x 
-$ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- bb.org_defconfig
-$ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi-  -j4
-$ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- uImage dtbs LOADADDR=0x80008000 -j4
+$ tar  -xvf   ti_am335x_source.tar		// 解压源码文件
+$ cd  linux								// 进入源码中的linux文件
+$ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- tisdk_am335x-evm_deconfig
+$ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-  zImage
+$ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- am335x-boneblack.dtb
 
 Kernel modules:
-$ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi-  modules -j4
+$ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi-  modules 
 ```
 
