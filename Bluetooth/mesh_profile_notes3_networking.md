@@ -90,10 +90,155 @@ group address分为两种，一种是动态分配的，另一种是固定的。
 | 0xFFFF | all-nodes |
 
 
-### 3.2.3 Address validity
+### 3.2.3 Address validity 地址有效性
 
-| 地址类型 | 源地址 | 目的地址
+| 地址类型 | 源地址 | control message 目的地址 | access message 目的地址 |
 | - | - | - | - | 
+| 未分配地址 | NO | NO | NO |
+| unicast address | yes | yes |yes |
+| virtual address | no | no | no |
+| group address | no | yes | yes |
+
+下表表示地址是否可以使用device key 或者是 application key： 
+
+| 地址类型 | Device Key 有效 | Application Key 有效 |
+| - | - | - |
+| unassigned address | no | no |
+| unicast address | yes | yes |
+| virtual address | no | yes |
+| group address | no | yes |
+
+
+### 3.2.4 Network PDU
+
+Network PDU的结构定义如下表所示：
+
+| filed | bits | notes |
+| - | - | - |
+| IVI | 1 | Least significant bit of IV Index |
+| NID | 7 | Value derived from the NetKey used to identify the Encryption Key and Privacy Key used to secure this PDU |
+| CTL | 1 | Network control |
+| TTL | 7 | Time to live |
+| SEQ | 24 | Sequence Number |
+| SRC | 16 | 源地址 |
+| DST | 16 | 目的地址  |
+| TransportPDU | 8 to 128 | 传输单元 |
+| NetMIC | 32 or 64 | 网络层信息完整性检查 |
+
+#### 3.2.4.1 IVI
+
+IVI是 用来认证加密Network PDU的IV Index的最低位。
+
+#### 3.2.4.2 NID
+
+ NID域包含一个7bit的 network identifier，用来提供一种简单的方式查找加密认证Network PDU所使用的Encryption Key和Privacy Key。
+
+NID是派生于Network Key，与Encryption Key和Privacy Key关联。
+
+#### 3.2.4.3 CTL
+
+CTL位判断消息是否是控制消息，当该位是1时，表示消息是control message。该位为0,则表示消息位access message。
+
+当CTL为0时，NetMIC是32-bit的值，下传输层包含access message。
+
+当CTL为1时，NetMIC是64-bit的值，下传输层包含control message。
+
+#### 3.2.4.4 TTL
+
+TTL是一个7-bit的值，表示消息跳转的次数。
+
+	0=没有被中继且不会被中继。
+	1=已经被中继过，不会再次中继
+	2~126 = 可能被中继过，仍将继续中继
+	127= 没有被中继，可以被中继
+	
+#### 3.2.4.5 SEQ
+
+该成员是一个24-bit的值，由IV index组成，对于每一个network PDU来说，这是一个由节点产生的唯一的值。
+
+
+
+#### 3.2.4.6 SRC
+
+源地址，必须是unicast address。可以根据源地址识别产生该消息的element。
+
+源地址由产生该消息的element设置，并且在传输过程中不会被中继节点接触（可以理解为对中继节点不可见？）。
+
+#### 3.2.4.7 DST
+
+目的地址，16-bit值，可以时unicast address、virtual address、group address。
+
+在传输过程中，不会被中继节点的网络层接触（理解为对中继节点网络层不可见）。
+
+#### 3.2.4.8 Transport PDU
+
+传输的字节数据，当CTL设置为1时，该域最大96 bit。当CTL为0时，最大长度为128 Bits。
+
+Transport PDU 是被产生该消息的下传输层设置，不能被网络层改变。
+
+#### 3.2.4.9 NetMIC
+
+该域长度取决于CTL，当CTL为0时，该域为64-bit；当CTL为1时，该域为32-bit。
+
+NetMIC用于确认DST和Transport PDU没有被破坏。
+
+NetMIC会被每一个传输、中继该消息的节点的网络层设置。
+
+#### 3.2.5 Network Interfaces
+
+网络层支持通过多个承载层来收发消息，每个bearer可以通过network interfaces与网络层连接。同一个节点内部的不同element间的消息传送是通过local interfaces实现的。
+
+举个例子，比如一个节点可能存在三个interfaces，一个用来通过advertising bearers收发消息；另外两个通过GATT bearers收发消息。
+
+Interface 可以提供filter（过滤器）用来控制消息的进出规则。
+
+#### 3.2.5.1 Interface input filter
+
+用来确定进来的消息是丢弃还是传送到网络层。
+
+#### 3.2.5.2 Interface output filter 
+
+用来确定出去的消息是被丢弃还是被传送到承载层。
+
+当TTL的值为1时，会丢弃所有要传送到承载层的消息。
+
+#### 3.2.5.3 Local network interface
+
+这用来在一个节点内部的不同element之间传送消息。当该interface受到消息时，会将消息传送到节点内的所有element.
+
+#### 3.2.5.4 Advertising bearer network interfaces
+
+该interface允许通过advertising bearer传送消息。
+
+当收到一个消息且消息没有被标记中继消息时，Advertising bearer network interface会使用Network Transmit state的值在advertisng bearer上传送该消息。
+
+当收到一个消息且被标记为中继消息，Advertising bearer network interface会使用Relay Transmit state的值在advertisng bearer上传送该消息。
+
+### 3.2.6 Network layer behavior
+
+#### 3.2.6.1 Relay feature
+
+中继特性指的是将从advertising bearer收到的Network PDU进行转发。该特性是选配的，可以启用或者不启用。如果支持代理特性，那么节点应该同时支持GATT和advertising两种bearer(承载层)。
+
+#### 3.2.6.2 Proxy feature
+
+用来转发在GATT和advertising bearer之间传送的消息。
+
+#### 3.2.6.3 接收network PDU
+
+消息是通过network interface从bearer layer 传送到network layer。网络层可以对消息标记一些附加的标签，以供后续使用。
+
+当网络层收到消息时，会首先检查NID的值是否匹配已知的NID值，若不匹配则忽略该消息。若可以匹配已知的NID，则节点会根据相匹配的Network Key来认证该消息。如果认证成功，而且SRC、DST是有效的，且网络层消息缓存中没有该消息，那么消息会被传送到下传输层被继续处理。
+
+消息被转发时，其中的IV index应该与收到时保持一致。
+
+如果从advertising bearer传送过来的消息被传送到下传输层处理，且节点支持中继特性（并使能），TTL不小于2，目的地址不是本节点的unicast address，那么TTL的值减1，Network PDU被标记为relay，Network PDU被重发向所有连接到advertising bearer的网络接口（network interfaces）。建议在收到Network PDU后，加一个任意时间的小延时，再进行转发。这样可以避免多次中继同时发生。
+
+
+如果从GATT承载层传过来的消息被传送到下传输层处理，节点支持并使能了代理特性，TTL不小于2，目的地址不是本节点的unicast，那么TTL减1，并且Network PDU重发到所有的network interfaces。
+
+如果从advertsing bearer传过来的消息被下传输层处理，并且代理特性被支持使能，TTL不小于2，目的地址不是本节点的unicast address，那么TTL减1，并且Network PDU将会被重发到所有连接GATT bearer的网络接口。
+
 
 
 
