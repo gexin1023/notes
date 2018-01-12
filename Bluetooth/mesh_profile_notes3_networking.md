@@ -580,6 +580,263 @@ Model可以被唯一的识别器所识别，蓝牙官方组织定义的模型识
 
 access payload最多被分割为32个12字节的片段（包含TranMIC字段），若TranMIC是4个字节长度，那么payload最长可以到达380字节，如果此时操作码只有一个字节的话，那么parameter字段的最大长度是379。
 
+下传输层可能会将PDU分割为多个小的数据包以便于承载层传输，下表列出了根据包的数量而建议的常用的包大小。
+
+| Nunber 0f Packets | maxium useful access payload size(octets) with 32-bit TransMIC | maxium useful access payload size(octets) with 64-bit TransMIC |
+| - | - | - |
+| 1 | 11(unsegmented) | n/a |
+| 1 | 8(segmented) | 4(segmented) |
+| 2 | 20 | 16 |
+| 3 | 32 | 28 |
+| n | (n\*12)-4 | (n\*12)-8 |
+| 32 | 380 | 376 |
+
+
+##### 3.5.3.1 操作码
+
+操作码可以是1、2或3个字节序列，操作码的第一个字节决定了使用字节的数量。
+
+如果操作码第一个字节的最高位是0,那么操作码只包含一个字节；如果最高两位是0b10，那么操作码包含2个字节；如果最高的两位是0b11,那么操作码包含3个字节。
+
+| 操作码第一个字节格式 | Notes |
+| - | - |
+| 0b0xxxxxxx | 1-octet Opcodes |
+| 0b01111111 | 保留，以后使用 |
+| 0b10xxxxxx | 2-octet Opcodes |
+| 0b11xxxxxx | 3-octet Opcodes |
+
+1-octet 操作码是蓝牙SIG定义的应用操作码，最多可以定义127个1-octet操作码，0x7F是保留给未来使用的。
+
+2-octet 也是蓝牙SIG定义的应用操作码，最多可以定位16384个2-octet 操作码。
+
+3-octet操作码是供制造商使用的操作码，每一个公司共有64个3-octet操作码。
+
+##### 3.5.3.2 应用参数
+
+参数字段是对应每个操作码定义了，后面会详细介绍，参数字段可以是0个字节长度。
+
+#### 3.5.4 Access layer behavior
+
+##### 3.5.4.1 发送access message
+
+消息被一个模型发往一个目的地址，目的地址可以时unicast address、group address或者是虚拟地址。
+
+消息源地址必须是产生该消息的element的unicast address。
+
+TTL字段可以被应用设置为它所希望消息在节点之间跳转的次数。如果没有设置TTL，那么访问层将会使用默认的TTL。
+
+访问层不保证消息的成功传送，每个模型都应该决定消息是否应该被重复传以及潜在重复数据的处理。
+
+如果要发送的消息是对已接收消息的回复，若已接收消息是发往unicast address的，那么应该在发响应消息包时使用20到50毫秒的随机延时。假如已接收消息是发往虚拟地址或者group address的，那么发送响应消息包应该假如20到500毫秒的随机延时。通过假如随机延时，可以降低多节点同时响应消息的概率，因而降低消息冲突。
+
+因为网络中的所有节点以及其他蓝牙设备是共享有限的带宽的，因此有必要观察节点的流量。在10秒的窗口内，一个节点应该产生小于100个下传输层PDU。
+
+##### 3.5.4.2 接收access message
+
+以下几点全部满足时，消息会被传送到model来处理，
+
++ 操作码属于目的地址模型的element
++ 目的地址设置为模型element的unicast address或者是的element订阅的group address 或是virtual address。
++ model绑定到了用于消息传输的application key或是device key。
+
+
+##### 3.5.4.3 Security considerations 安全注意事项
+
+消息是被上传输层就加密和认证的，一个节点产生的消息应该使用为本Model配置的application key 或者是device key。
+
+响应消息应该使用与相关消息相同的key。
+
+##### 3.5.4.4 Message error procedure
+
+当收到一个不能解析的消息时，就会忽略该消息。
+
+消息不能解析包含以下几种情况：
+
++ application opcode 不能被接受消息的element理解
++ access message 长度不正确
++ application parameters包含当前被禁用的值
+
+#### 3.5.5 Unacknowledged and acknowledged messages
+
+在访问层，消息可以被定义为Unacknowledged或者是acknowledged。
+
+##### 3.5.5.1 Unacknowledged message
+
+当应用觉得同级节点需要知道状态变化时，会发送一个status message。状态消息被发往与state关联的模型的发布地址，Unacknowledged message是没有回应消息的，因此不会知道已发送的消息是否被成功发送或是是否被处理。
+
+##### 3.5.5.2 Acknowledged message
+
+Acknowledged message会被每一个接收该消息的节点回应，回应消息通常是status message。如果在一定时间内没有收到回应消息，会重发消息，等待时间是由application确定的。
+
+如果消息是被发往多个节点的，比如目的地址group address，节点可能不知道有多少接收节点会回应该消息。不建议向所有节点发送Acknowledged message。为了增加成功发送的概率，发送节点需要确定消息重发次数。
+
+如果发送节点没有收到回应消息，那么节点会认为消息没有发送。Acknowledged message超时时间应该最少设置为30秒，值由应用设置。当一个Acknowledged message发送给model，他应该发送一个回应消息以确认该消息被接收。回应消息可以包含状态信息，回应消息是 unacknowlwdged message。回应消息的目的地址应该被设置为Acknowledged message的源地址。如果Acknowledged message的TTL字段是0，那么也建议回应消息的TTL也设置为0。
+
+#### 3.5.6 Publish and subscribe发布与订阅
+
+发布与订阅是通过目的地址来实现的，目的地址的配置管理在更高层级的规范中。
+
+##### 3.5.6.1 Publish
+
+一个Model发布数据如果它向目的地址转发一个无关消息，消息可以被转发到的地址可以是unicast address, group address或者是virtual address。节点中的没有个Model都有一个发布地址。
+
+###### 3.5.6.1.1 State transitions 状态转变
+
+element的状态可以立刻转变或是经历一段时间转变为新的状态，如下图所示。
+
+![](pic/pic_state_transition.png) 
+
+状态从初始状态转变为新状态所需要的时间被称为转变时间。从当前状态到目标状态的时间成为保持时间。当收到一个设置状态的消息时，新的值不会立即生效，状态值会被存储起来作为目标状态。一个状态消息可以在任何时间被发出，状态消息中会包含当前的状态。
+
+###### 3.5.6.1.2 State change publishing 状态转变发布
+
+发布状态转变的消息是通过设置Model Publication state来实现的。当model使能发布时，状态改变完成时就会发送相关的状态改变信息。对于状态转变时间超过2秒的情况，建议增加一个状态发布在状态转变开始后1秒内。
+
+
+###### 3.5.6.1.3 周期发布
+
+model可以配置为周期性的发送状态消息，无论状态是否变化。这是通过 Publish Period实现的。当Publish Period设为非零值时，状态消息会周期性发布。
+
+##### 3.5.6.2 Subscribe 订阅
+
+每个model都有一个或多个订阅列表，订阅列表中包含一个或多个地址。订阅地址可以是group address 或者是virtual address。
+
+#### 3.5.7 Example message sequence charts
+
+##### 3.5.7.1 Acknowledged Get
+
+下图说明了一个client获取server的状态
+
+![](pic/pic_acknowledge_get.png) 
+
+
+##### 3.5.7.2 Acknowledged Set
+
+下图说明client使用Acknowledged Set消息对server的状态进行设置，client会收到server的回应消息，如果server设置了状态发布，那么可以发布状态消息。如果client订阅了server的发布地址，那么client端会收到两个状态消息。
+
+![](pic/pic_acknowledge_set.png) 
+
+##### 3.5.7.3 Unacknowledged Set
+
+client可以使用Unacknowledged Set消息设置server的状态，如下图所示。
+
+![](pic/pic_unacknowledge_set.png) 
+
+##### 3.5.7.4 Acknowledged set with periodic publishing
+
+client使用Acknowledged Set消息对server的状态进行设置，server启用周期性状态发布。
+
+![](pic/pic_acknowledge_set_publish.png) 
+
+### 3.6 Mesh Security
+
+#### 3.6.1 Endianness 字节序
+
+在本层使用多字节字段使用大端字节序。
+
+#### 3.6.2 Security toolbox
+
+##### 3.6.2.1 Encrption  function 加密函数
+
+加密函数具体可以查看《Volume 3, Part H, Section 2.2.1 of the Core Specification》，其形式如下：
+
+$$ ciphertext = e (key, plaintext) $$
+
+
+##### 3.6.2.2 CMAC function
+
+ Cipher-based Message Authentication Code (CMAC) 使用AES-128作为block cipher函数，也被称为 AES-CMAC。
+ 
+ $$ MAC = AES - CMAC_k(m) $$
+ 
+ 其中k是一个128-bit的key值，m是需要被认证的可变长度的数据。
+ 
+  
+##### 3.6.2.3 CCM funtion
+
+RFC3610 defines the AES Counter with CBC-MAC (CCM) (see Volume 6, Part E, Section 1 of the Core Specification ). 
+
+$$ ciphertext, mic = AES-CCM_k (n, m, a) $$
+
+其中，k是128-bit的key值，n是一个104-bit的nonce，m是要被加密认证的可变长度数据（plaintext），a是要被认证的可变长度数据（additional data）；ciphertext加密之后的加密后的数据，mic是信息完整性检查的值。
+
+##### 3.6.2.4 s1 SALT generation function
+
+$$ s1(M) = AES-CMAC_{ZERO} (M) $$
+
+其中，M是一个长度非0的字节序列或者是ASCII字符串，ZERO是128-bit的值（每位都是0）
+
+如果M是一个ASCII字符串，就会被转换为一个字节序列。比如如果M是“MESH”，会被转换成为字节序列：0x4d, 0x45, 0x53, 0x 48。
+
+##### 3.6.2.5 k1 derivatoin function
+
+The network key material derivation function k1 is used to generate instances of IdentityKey and BeaconKey.
+
+这里的key-generation函数使用了MAC函数 $AES-CMAC_T$，在其中使用了一个128-bit的参数 T。
+
+$$ k1(N, SALT, P) = AES-CMAC_T (P) $$
+
+其中N是0或任意字节，SALT是128bit，P是0或多个字节。$T=AES-CMAC_{SALT} (N)$
+
+
+##### 3.6.2.6 k2 network key material derivatoin function
+
+The network key material derivation function k2 is used to generate instances of EncryptionKey, PrivacyKey, and NID for use as Master and Private Low Power node communication.
+
+##### 3.6.2.7 k3 derivation function
+
+The derivation function k3 is used to generate a public value of 64 bits derived from a private key.The definition of this derivation function makes use of the MAC function AES-CMACT with a 128-bit key T
+
+##### 3.6.2.8 k4 derivation function
+
+The derivation function k4 is used to generate a public value of 6 bits derived from a private key.
+
+The definition of this derivation function makes use of the MAC function AES-CMACT with a 128-bit key T.
+
+#### 3.6.3 Sequnce number
+
+Sequnce nmber是一个24-bit的值，在网络层PDU的SEQ字段包含了该值，这主要是用来抵御重传攻击的。同一个节点内部的不同element之间可以共享该值也可以不共享。从每个element发出的Network PDU都有着不同的sequnce number可以保证mesh网络的安全性。
+
+作为一个24-bit的值，一个element最多可以传递 16777216 条消息在收到nonce之前。如果一个element没5秒钟发送一条喜爱哦戏，这个节点可以传送2.6年在nonce重复之前。
+
+每个element应该在Network PDU中使用严格递增的sequence number。在sequnce number到达最大值以前，节点应该使用IV Update 程序更新IV值。
+
+#### 3.6.4 IV index
+
+IV index是一个32-bit的值，这是一个共享的网络资源，一个mesh网络中的所有节点都使用相同的IV值。
+
+IV值从0X00000000开始，在IV Update 程序中增加。IV增加的时间不是确切的，因为每个Network PDU都会使用IV的最低位。
+
+#### 3.6.5 Nonce
+
+nonce是一个13字节的值，每一个消息的该值都是不一样的。有四种类型的nonce，以其第一个字节的来区分，如下表所示
+
+| Nonce Type | Nonce | Description |
+| - | - | - |
+| 0x00 | Network nonce | Used with an encryption key for network authentication and encryption |
+| 0x01 | Application nonce | Used with an application key for upper transport authentication and encryption |
+| 0x02 | Device nonce | Used with a device key for upper transport authentication and encryption |
+| 0x03 | Proxy nonce | Used with an encryption key for proxy authentication and encryption |
+
+#### 3.6.6 Keys
+
+Mesh中定义了两种类型的key：application keys (AppKey)、network keys(NetKey)。AppKey用来在上传输层被使用，NetKeys在网络层被使用。两种类型的Key都可以在节点间共享。还有一种Key是device key(DevKey)，这是一个特殊的application key，每个节点都有一个特有的DevKey，只能被节点本身以及Client Configure所知，用来保护节点和Configureaion Client之间通讯。
+
+AppKey是跟NetKey绑定的，这意味着AppKey只能在它所绑定的NetKey的上下文中使用。一个AppKey只能绑定一个NetKey，一个DevKey可以绑定到所有的Netkey上。
+
+key的绑定关联关系可以用下图解释：
+
+![](pic/pic_key_bind.png) 
+
+
+
+
+
+
+
+
+
+
 
 
 
