@@ -2,7 +2,7 @@
 
 蓝牙mesh的结构如下图所示：
 
-![](/home/gexin/repo/notes/Bluetooth/pic/layer_of_mseh.png) 
+![](pic/layer_of_mseh.png) 
 
 蓝牙mesh网络是一种基于泛洪管理的mesh网络，消息是通过广播信道传递，收到消息的节点可以继续转发消息，这样就可以实现更远范围的消息传递。为了防止出现消息不受限制的转发传递，规定了以下两种方法来避免：
 
