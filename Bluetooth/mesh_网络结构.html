@@ -1,0 +1,2904 @@
+<!DOCTYPE HTML>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <title>
+   Made with Remarkable!
+  </title>
+  <link href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/github.min.css" rel="stylesheet"/>
+  <style type="text/css">
+   body,table tr{background-color:#fff}table tr td,table tr th{border:1px solid #ccc;text-align:left;padding:6px 13px;margin:0}pre code,table,table tr{padding:0}hr,pre code{background:0 0}body{font:16px Helvetica,Arial,sans-serif;line-height:1.4;color:#333;word-wrap:break-word;padding:10px 15px}strong,table tr th{font-weight:700}h1{font-size:2em;margin:.67em 0;text-align:center}h2{font-size:1.75em}h3{font-size:1.5em}h4{font-size:1.25em}h1,h2,h3,h4,h5,h6{font-weight:700;position:relative;margin-top:15px;margin-bottom:15px;line-height:1.1}h1,h2{border-bottom:1px solid #eee}hr{height:0;margin:15px 0;overflow:hidden;border:0;border-bottom:1px solid #ddd}a{color:#4183C4}a.absent{color:#c00}ol,ul{padding-left:15px;margin-left:5px}ol{list-style-type:lower-roman}table tr{border-top:1px solid #ccc;margin:0}table tr:nth-child(2n){background-color:#aaa}table tr td :first-child,table tr th :first-child{margin-top:0}table tr td:last-child,table tr th :last-child{margin-bottom:0}img{max-width:100%}blockquote{padding:0 15px;border-left:4px solid #ccc}code,tt{margin:0 2px;padding:0 5px;white-space:nowrap;border:1px solid #eaeaea;background-color:#f8f8f8;border-radius:3px}pre code{margin:0;white-space:pre;border:none}.highlight pre,pre{background-color:#f8f8f8;border:1px solid #ccc;font-size:13px;line-height:19px;overflow:auto;padding:6px 10px;border-radius:3px}
+  </style>
+ </head>
+ <body>
+  <h2 id="3-mesh-networking">
+   3. Mesh Networking
+  </h2>
+  <div class="toc">
+   <ul>
+    <li>
+     <a href="#3-mesh-networking">
+      3. Mesh Networking
+     </a>
+     <ul>
+      <li>
+       <a href="#31-bearers">
+        3.1 Bearers 承载层
+       </a>
+       <ul>
+        <li>
+         <a href="#311-advertising-bearer">
+          3.1.1 Advertising bearer
+         </a>
+        </li>
+        <li>
+         <a href="#312-gatt-bearer">
+          3.1.2 GATT bearer
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a href="#32-network-layer">
+        3.2  Network Layer 网络层
+       </a>
+       <ul>
+        <li>
+         <a href="#321">
+          3.2.1 字节序
+         </a>
+        </li>
+        <li>
+         <a href="#322">
+          3.2.2 地址
+         </a>
+         <ul>
+          <li>
+           <a href="#3221">
+            3.2.2.1 未分配地址
+           </a>
+          </li>
+          <li>
+           <a href="#3222-unicast-address">
+            3.2.2.2 Unicast address
+           </a>
+          </li>
+          <li>
+           <a href="#3223">
+            3.2.2.3 虚拟地址
+           </a>
+          </li>
+          <li>
+           <a href="#3224-group-address">
+            3.2.2.4 group address
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a href="#323-address-validity">
+        3.2.3 Address validity 地址有效性
+       </a>
+      </li>
+      <li>
+       <a href="#324-network-pdu">
+        3.2.4 Network PDU
+       </a>
+       <ul>
+        <li>
+         <a href="#3241-ivi">
+          3.2.4.1 IVI
+         </a>
+        </li>
+        <li>
+         <a href="#3242-nid">
+          3.2.4.2 NID
+         </a>
+        </li>
+        <li>
+         <a href="#3243-ctl">
+          3.2.4.3 CTL
+         </a>
+        </li>
+        <li>
+         <a href="#3244-ttl">
+          3.2.4.4 TTL
+         </a>
+        </li>
+        <li>
+         <a href="#3245-seq">
+          3.2.4.5 SEQ
+         </a>
+        </li>
+        <li>
+         <a href="#3246-src">
+          3.2.4.6 SRC
+         </a>
+        </li>
+        <li>
+         <a href="#3247-dst">
+          3.2.4.7 DST
+         </a>
+        </li>
+        <li>
+         <a href="#3248-transport-pdu">
+          3.2.4.8 Transport PDU
+         </a>
+        </li>
+        <li>
+         <a href="#3249-netmic">
+          3.2.4.9 NetMIC
+         </a>
+        </li>
+        <li>
+         <a href="#325-network-interfaces">
+          3.2.5 Network Interfaces
+         </a>
+        </li>
+        <li>
+         <a href="#3251-interface-input-filter">
+          3.2.5.1 Interface input filter
+         </a>
+        </li>
+        <li>
+         <a href="#3252-interface-output-filter">
+          3.2.5.2 Interface output filter
+         </a>
+        </li>
+        <li>
+         <a href="#3253-local-network-interface">
+          3.2.5.3 Local network interface
+         </a>
+        </li>
+        <li>
+         <a href="#3254-advertising-bearer-network-interfaces">
+          3.2.5.4 Advertising bearer network interfaces
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a href="#326-network-layer-behavior">
+        3.2.6 Network layer behavior
+       </a>
+       <ul>
+        <li>
+         <a href="#3261-relay-feature">
+          3.2.6.1 Relay feature
+         </a>
+        </li>
+        <li>
+         <a href="#3262-proxy-feature">
+          3.2.6.2 Proxy feature
+         </a>
+        </li>
+        <li>
+         <a href="#3263-network-pdu">
+          3.2.6.3 接收network PDU
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a href="#33-lower-transport-layer">
+        3.3 Lower Transport Layer 下传输层
+       </a>
+       <ul>
+        <li>
+         <a href="#331">
+          3.3.1 字节序
+         </a>
+        </li>
+        <li>
+         <a href="#332-lower-transport-pdu">
+          3.3.2 Lower Transport PDU
+         </a>
+        </li>
+        <li>
+         <a href="#3321-unsegmented-access-message">
+          3.3.2.1  Unsegmented Access message
+         </a>
+        </li>
+        <li>
+         <a href="#3322-segmented-access-message">
+          3.3.2.2 Segmented Access message
+         </a>
+        </li>
+        <li>
+         <a href="#3323-unsegmented-control-message">
+          3.3.2.3 Unsegmented Control Message
+         </a>
+         <ul>
+          <li>
+           <a href="#33231-segmented-acknowledgment-message">
+            3.3.2.3.1 Segmented Acknowledgment message
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li>
+         <a href="#3324-segmented-control-message">
+          3.3.2.4 Segmented Control message
+         </a>
+        </li>
+        <li>
+         <a href="#333">
+          3.3.3 分片和重组
+         </a>
+         <ul>
+          <li>
+           <a href="#3331">
+            3.3.3.1 分割
+           </a>
+          </li>
+          <li>
+           <a href="#3332">
+            3.3.3.2 重组
+           </a>
+          </li>
+          <li>
+           <a href="#3333-segmentation-behavior">
+            3.3.3.3 segmentation behavior 分片表现
+           </a>
+          </li>
+          <li>
+           <a href="#3334-reassembly-behavior">
+            3.3.3.4 Reassembly behavior 重组表现
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li>
+         <a href="#334-friend-queue">
+          3.3.4 Friend Queue
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a href="#34-upper-trnsport-layer">
+        3.4 Upper trnsport layer 上传输层
+       </a>
+       <ul>
+        <li>
+         <a href="#341">
+          3.4.1 字节序
+         </a>
+        </li>
+        <li>
+         <a href="#342-upper-transport-access-pdu">
+          3.4.2 Upper Transport Access PDU
+         </a>
+         <ul>
+          <li>
+           <a href="#3421-encrypted-access-payload">
+            3.4.2.1 Encrypted access payload
+           </a>
+          </li>
+          <li>
+           <a href="#3422-transmic">
+            3.4.2.2 TransMIC
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li>
+         <a href="#343-upper-transport-control-pdu">
+          3.4.3 Upper Transport Control PDU
+         </a>
+        </li>
+        <li>
+         <a href="#344-upper-transport-layer-behavior">
+          3.4.4 Upper transport layer behavior
+         </a>
+         <ul>
+          <li>
+           <a href="#3441-transmitting-an-access-payload">
+            3.4.4.1 Transmitting an access payload
+           </a>
+          </li>
+          <li>
+           <a href="#3442-receiving-an-upper-transport-pdu">
+            3.4.4.2  Receiving an Upper Transport PDU
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li>
+         <a href="#345-transport-control-messages">
+          3.4.5 Transport Control messages
+         </a>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a href="#35-access-layer">
+        3.5 Access Layer 访问层
+       </a>
+       <ul>
+        <li>
+         <a href="#351">
+          3.5.1 字节序
+         </a>
+        </li>
+        <li>
+         <a href="#352-model-identifier">
+          3.5.2 Model identifier 模型识别器
+         </a>
+        </li>
+        <li>
+         <a href="#353-access-payload">
+          3.5.3 Access Payload
+         </a>
+         <ul>
+          <li>
+           <a href="#3531">
+            3.5.3.1 操作码
+           </a>
+          </li>
+          <li>
+           <a href="#3532">
+            3.5.3.2 应用参数
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li>
+         <a href="#354-access-layer-behavior">
+          3.5.4 Access layer behavior
+         </a>
+         <ul>
+          <li>
+           <a href="#3541-access-message">
+            3.5.4.1 发送access message
+           </a>
+          </li>
+          <li>
+           <a href="#3542-access-message">
+            3.5.4.2 接收access message
+           </a>
+          </li>
+          <li>
+           <a href="#3543-security-considerations">
+            3.5.4.3 Security considerations 安全注意事项
+           </a>
+          </li>
+          <li>
+           <a href="#3544-message-error-procedure">
+            3.5.4.4 Message error procedure
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li>
+         <a href="#355-unacknowledged-and-acknowledged-messages">
+          3.5.5 Unacknowledged and acknowledged messages
+         </a>
+         <ul>
+          <li>
+           <a href="#3551-unacknowledged-message">
+            3.5.5.1 Unacknowledged message
+           </a>
+          </li>
+          <li>
+           <a href="#3552-acknowledged-message">
+            3.5.5.2 Acknowledged message
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li>
+         <a href="#356-publish-and-subscribe">
+          3.5.6 Publish and subscribe发布与订阅
+         </a>
+         <ul>
+          <li>
+           <a href="#3561-publish">
+            3.5.6.1 Publish
+           </a>
+           <ul>
+            <li>
+             <a href="#35611-state-transitions">
+              3.5.6.1.1 State transitions 状态转变
+             </a>
+            </li>
+            <li>
+             <a href="#35612-state-change-publishing">
+              3.5.6.1.2 State change publishing 状态转变发布
+             </a>
+            </li>
+            <li>
+             <a href="#35613">
+              3.5.6.1.3 周期发布
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li>
+           <a href="#3562-subscribe">
+            3.5.6.2 Subscribe 订阅
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li>
+         <a href="#357-example-message-sequence-charts">
+          3.5.7 Example message sequence charts
+         </a>
+         <ul>
+          <li>
+           <a href="#3571-acknowledged-get">
+            3.5.7.1 Acknowledged Get
+           </a>
+          </li>
+          <li>
+           <a href="#3572-acknowledged-set">
+            3.5.7.2 Acknowledged Set
+           </a>
+          </li>
+          <li>
+           <a href="#3573-unacknowledged-set">
+            3.5.7.3 Unacknowledged Set
+           </a>
+          </li>
+          <li>
+           <a href="#3574-acknowledged-set-with-periodic-publishing">
+            3.5.7.4 Acknowledged set with periodic publishing
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </li>
+      <li>
+       <a href="#36-mesh-security">
+        3.6 Mesh Security
+       </a>
+       <ul>
+        <li>
+         <a href="#361-endianness">
+          3.6.1 Endianness 字节序
+         </a>
+        </li>
+        <li>
+         <a href="#362-security-toolbox">
+          3.6.2 Security toolbox
+         </a>
+         <ul>
+          <li>
+           <a href="#3621-encrption-function">
+            3.6.2.1 Encrption  function 加密函数
+           </a>
+          </li>
+          <li>
+           <a href="#3622-cmac-function">
+            3.6.2.2 CMAC function
+           </a>
+          </li>
+          <li>
+           <a href="#3623-ccm-funtion">
+            3.6.2.3 CCM funtion
+           </a>
+          </li>
+          <li>
+           <a href="#3624-s1-salt-generation-function">
+            3.6.2.4 s1 SALT generation function
+           </a>
+          </li>
+          <li>
+           <a href="#3625-k1-derivatoin-function">
+            3.6.2.5 k1 derivatoin function
+           </a>
+          </li>
+          <li>
+           <a href="#3626-k2-network-key-material-derivatoin-function">
+            3.6.2.6 k2 network key material derivatoin function
+           </a>
+          </li>
+          <li>
+           <a href="#3627-k3-derivation-function">
+            3.6.2.7 k3 derivation function
+           </a>
+          </li>
+          <li>
+           <a href="#3628-k4-derivation-function">
+            3.6.2.8 k4 derivation function
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li>
+         <a href="#363-sequnce-number">
+          3.6.3 Sequnce number
+         </a>
+        </li>
+        <li>
+         <a href="#364-iv-index">
+          3.6.4 IV index
+         </a>
+        </li>
+        <li>
+         <a href="#365-nonce">
+          3.6.5 Nonce
+         </a>
+        </li>
+        <li>
+         <a href="#366-keys">
+          3.6.6 Keys
+         </a>
+        </li>
+       </ul>
+      </li>
+     </ul>
+    </li>
+   </ul>
+  </div>
+  <p>
+   本部分以mesh网络的分层结构的顺序自下而上地介绍mesh网络。mesh网络结构如下所示：
+  </p>
+  <p>
+   <img alt=" " src="pic/layer_of_mseh.png" title="mesh网络结构"/>
+  </p>
+  <h3 id="31-bearers">
+   3.1 Bearers 承载层
+  </h3>
+  <p>
+   本规范定义了两种承载层：
+  </p>
+  <ul>
+   <li>
+    <strong>
+     Advertising bearer
+    </strong>
+   </li>
+   <li>
+    <strong>
+     GATT bearer
+    </strong>
+   </li>
+  </ul>
+  <h4 id="311-advertising-bearer">
+   3.1.1 Advertising bearer
+  </h4>
+  <p>
+   使用 advertising bearer 时，mesh数据包可以使用Advertising Data发送，BLE advertising PDU使用 Mesh Message AD Type标识。
+  </p>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      Length
+     </th>
+     <th>
+      AD Type
+     </th>
+     <th>
+      Contens
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      0xXX
+     </td>
+     <td>
+      Mesh Message
+     </td>
+     <td>
+      network PDU
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <p>
+   任何使用Mesh Message AD Type的广播消息应该是无需连接（ non-connectable）、无需扫描的（ non-scannable） 非直接广告事件。如果一个节点在一个连接的或者扫描的广告事件中收到了一个Mesh Message AD Type 消息， 那么该消息会被忽略。
+  </p>
+  <p>
+   一个只支持 advertising bearer的设备应该使用尽可能高的占空比（接近100%）来扫描消息，以避免遗失消息或者Provisioning PDUs。
+  </p>
+  <p>
+   所有设备都应该支持GAP Observer role 和 GAP Broadcaster role。
+  </p>
+  <h4 id="312-gatt-bearer">
+   3.1.2 GATT bearer
+  </h4>
+  <p>
+   GATT bearer可以使那些不支持advertising bearer的设备可以加入到mesh网中，GATT bearer 使用Proxy protocol通过GATT连接在设备之间转发、接受Proxy PDUs。
+  </p>
+  <p>
+   The GATT bearer uses a characteristic to write to and receive notifications of mesh messages using the attribute protocol.（这句话没理解什么意思）
+  </p>
+  <p>
+   GATT bearer定义了两种角色，分别是Client 和 Server。GATT Bearer Server应该实例化一个且只能一个 Mesh Proxy Service，GATT Bearer Client 应该支持Mesh Proxy Service。
+  </p>
+  <h3 id="32-network-layer">
+   3.2  Network Layer 网络层
+  </h3>
+  <p>
+   网路层定义了可以使Lower Transport PDUs被bearer层转发的 Network PDU格式。网络层将从input interface收到的incoming消息进行解密（decrypt）、授权(anthenticate)并转发向output interface 或是更高的层级；将outgoing消息进行加密、授权并转发到其他网络接口。
+  </p>
+  <h4 id="321">
+   3.2.1 字节序
+  </h4>
+  <p>
+   该层使用大端字节序
+  </p>
+  <h4 id="322">
+   3.2.2 地址
+  </h4>
+  <p>
+   地址是16bit长度的值(两个字节），如下所示：
+  </p>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      地址二进制值
+     </th>
+     <th>
+      地址类型
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      0b0000000000000000
+     </td>
+     <td>
+      未分配地址
+     </td>
+    </tr>
+    <tr>
+     <td>
+      0b0xxxxxxxxxxxxxxx（0x0000除外）
+     </td>
+     <td>
+      unicast address
+     </td>
+    </tr>
+    <tr>
+     <td>
+      0b10xxxxxxxxxxxxxx
+     </td>
+     <td>
+      virtual address
+     </td>
+    </tr>
+    <tr>
+     <td>
+      ob11xxxxxxxxxxxxxx
+     </td>
+     <td>
+      group address
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <h5 id="3221">
+   3.2.2.1 未分配地址
+  </h5>
+  <p>
+   未分配地址是当一个节点的element还没有配置或者还没有分配地址时的一个地址。当不需要发布消息时，可以将publish address设置为unassigned address。
+  </p>
+  <h5 id="3222-unicast-address">
+   3.2.2.2 Unicast address
+  </h5>
+  <p>
+   unicast address是分配给每一个element的唯一地址，取值范围是0x0001到0x7FFF。unicast address在一个节点的生命周期中保持不变。unicast地址被用作消息的源地址，也可能用于消息的目的地址。如果一个消息是发往一个unicast 地址，那么该消息最多被一个element处理。
+  </p>
+  <h5 id="3223">
+   3.2.2.3 虚拟地址
+  </h5>
+  <p>
+   虚拟地址代表一系列的目的地址，每一个虚拟地址逻辑上代表一个128-bit的标签UUID。一个或多个element可能发布或订阅一个标签UUID， 标签UUID不被传递，应该被当作消息完整性检查值的附加域。
+  </p>
+  <p>
+   虚拟地址的15bit被设置为1, 14bit设置为0, 13~0bit是一个hash值。这个哈希值派生于UUID。
+  </p>
+  <p>
+   当一个发往虚拟地址的Access消息收到时，每一个匹配该虚拟地址的UUID都会被upper transport层用来当作附加唉的数据作为认证消息的一部分。
+  </p>
+  <p>
+   控制消息(control message)不可以使用虚拟地址。
+  </p>
+  <h5 id="3224-group-address">
+   3.2.2.4 group address
+  </h5>
+  <p>
+   Group address 是一个被写入0个或多个element的地址。地址位的15bit 14bit均被设置为1.
+  </p>
+  <p>
+   Group address只能被用作目的地址，被发往group address的消息被发送到所有订阅该group address的modale interfaces。
+  </p>
+  <p>
+   group address分为两种，一种是动态分配的，另一种是固定的。
+  </p>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      地址值
+     </th>
+     <th>
+      Fixed Group Address
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      0xFF00-0XFFFB
+     </td>
+     <td>
+      RFU
+     </td>
+    </tr>
+    <tr>
+     <td>
+      0xFFFC
+     </td>
+     <td>
+      all-proxies
+     </td>
+    </tr>
+    <tr>
+     <td>
+      0xFFFD
+     </td>
+     <td>
+      all-friends
+     </td>
+    </tr>
+    <tr>
+     <td>
+      0xFFFE
+     </td>
+     <td>
+      all-relays
+     </td>
+    </tr>
+    <tr>
+     <td>
+      0xFFFF
+     </td>
+     <td>
+      all-nodes
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <h3 id="323-address-validity">
+   3.2.3 Address validity 地址有效性
+  </h3>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      地址类型
+     </th>
+     <th>
+      源地址
+     </th>
+     <th>
+      control message 目的地址
+     </th>
+     <th>
+      access message 目的地址
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      未分配地址
+     </td>
+     <td>
+      NO
+     </td>
+     <td>
+      NO
+     </td>
+     <td>
+      NO
+     </td>
+    </tr>
+    <tr>
+     <td>
+      unicast address
+     </td>
+     <td>
+      yes
+     </td>
+     <td>
+      yes
+     </td>
+     <td>
+      yes
+     </td>
+    </tr>
+    <tr>
+     <td>
+      virtual address
+     </td>
+     <td>
+      no
+     </td>
+     <td>
+      no
+     </td>
+     <td>
+      no
+     </td>
+    </tr>
+    <tr>
+     <td>
+      group address
+     </td>
+     <td>
+      no
+     </td>
+     <td>
+      yes
+     </td>
+     <td>
+      yes
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <p>
+   下表表示地址是否可以使用device key 或者是 application key：
+  </p>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      地址类型
+     </th>
+     <th>
+      Device Key 有效
+     </th>
+     <th>
+      Application Key 有效
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      unassigned address
+     </td>
+     <td>
+      no
+     </td>
+     <td>
+      no
+     </td>
+    </tr>
+    <tr>
+     <td>
+      unicast address
+     </td>
+     <td>
+      yes
+     </td>
+     <td>
+      yes
+     </td>
+    </tr>
+    <tr>
+     <td>
+      virtual address
+     </td>
+     <td>
+      no
+     </td>
+     <td>
+      yes
+     </td>
+    </tr>
+    <tr>
+     <td>
+      group address
+     </td>
+     <td>
+      no
+     </td>
+     <td>
+      yes
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <h3 id="324-network-pdu">
+   3.2.4 Network PDU
+  </h3>
+  <p>
+   Network PDU的结构定义如下表所示：
+  </p>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      filed
+     </th>
+     <th>
+      bits
+     </th>
+     <th>
+      notes
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      IVI
+     </td>
+     <td>
+      1
+     </td>
+     <td>
+      Least significant bit of IV Index
+     </td>
+    </tr>
+    <tr>
+     <td>
+      NID
+     </td>
+     <td>
+      7
+     </td>
+     <td>
+      Value derived from the NetKey used to identify the Encryption Key and Privacy Key used to secure this PDU
+     </td>
+    </tr>
+    <tr>
+     <td>
+      CTL
+     </td>
+     <td>
+      1
+     </td>
+     <td>
+      Network control
+     </td>
+    </tr>
+    <tr>
+     <td>
+      TTL
+     </td>
+     <td>
+      7
+     </td>
+     <td>
+      Time to live
+     </td>
+    </tr>
+    <tr>
+     <td>
+      SEQ
+     </td>
+     <td>
+      24
+     </td>
+     <td>
+      Sequence Number
+     </td>
+    </tr>
+    <tr>
+     <td>
+      SRC
+     </td>
+     <td>
+      16
+     </td>
+     <td>
+      源地址
+     </td>
+    </tr>
+    <tr>
+     <td>
+      DST
+     </td>
+     <td>
+      16
+     </td>
+     <td>
+      目的地址
+     </td>
+    </tr>
+    <tr>
+     <td>
+      TransportPDU
+     </td>
+     <td>
+      8 to 128
+     </td>
+     <td>
+      传输单元
+     </td>
+    </tr>
+    <tr>
+     <td>
+      NetMIC
+     </td>
+     <td>
+      32 or 64
+     </td>
+     <td>
+      网络层信息完整性检查
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <h4 id="3241-ivi">
+   3.2.4.1 IVI
+  </h4>
+  <p>
+   IVI是 用来认证加密Network PDU的IV Index的最低位。
+  </p>
+  <h4 id="3242-nid">
+   3.2.4.2 NID
+  </h4>
+  <p>
+   NID域包含一个7bit的 network identifier，用来提供一种简单的方式查找加密认证Network PDU所使用的Encryption Key和Privacy Key。
+  </p>
+  <p>
+   NID是派生于Network Key，与Encryption Key和Privacy Key关联。
+  </p>
+  <h4 id="3243-ctl">
+   3.2.4.3 CTL
+  </h4>
+  <p>
+   CTL位判断消息是否是控制消息，当该位是1时，表示消息是control message。该位为0,则表示消息位access message。
+  </p>
+  <p>
+   当CTL为0时，NetMIC是32-bit的值，下传输层包含access message。
+  </p>
+  <p>
+   当CTL为1时，NetMIC是64-bit的值，下传输层包含control message。
+  </p>
+  <h4 id="3244-ttl">
+   3.2.4.4 TTL
+  </h4>
+  <p>
+   TTL是一个7-bit的值，表示消息跳转的次数。
+  </p>
+  <pre><code>0=没有被中继且不会被中继。
+1=已经被中继过，不会再次中继
+2~126 = 可能被中继过，仍将继续中继
+127= 没有被中继，可以被中继
+</code></pre>
+  <h4 id="3245-seq">
+   3.2.4.5 SEQ
+  </h4>
+  <p>
+   该成员是一个24-bit的值，由IV index组成，对于每一个network PDU来说，这是一个由节点产生的唯一的值。
+  </p>
+  <h4 id="3246-src">
+   3.2.4.6 SRC
+  </h4>
+  <p>
+   源地址，必须是unicast address。可以根据源地址识别产生该消息的element。
+  </p>
+  <p>
+   源地址由产生该消息的element设置，并且在传输过程中不会被中继节点接触（可以理解为对中继节点不可见？）。
+  </p>
+  <h4 id="3247-dst">
+   3.2.4.7 DST
+  </h4>
+  <p>
+   目的地址，16-bit值，可以时unicast address、virtual address、group address。
+  </p>
+  <p>
+   在传输过程中，不会被中继节点的网络层接触（理解为对中继节点网络层不可见）。
+  </p>
+  <h4 id="3248-transport-pdu">
+   3.2.4.8 Transport PDU
+  </h4>
+  <p>
+   传输的字节数据，当CTL设置为1时，该域最大96 bit。当CTL为0时，最大长度为128 Bits。
+  </p>
+  <p>
+   Transport PDU 是被产生该消息的下传输层设置，不能被网络层改变。
+  </p>
+  <h4 id="3249-netmic">
+   3.2.4.9 NetMIC
+  </h4>
+  <p>
+   该域长度取决于CTL，当CTL为0时，该域为64-bit；当CTL为1时，该域为32-bit。
+  </p>
+  <p>
+   NetMIC用于确认DST和Transport PDU没有被破坏。
+  </p>
+  <p>
+   NetMIC会被每一个传输、中继该消息的节点的网络层设置。
+  </p>
+  <h4 id="325-network-interfaces">
+   3.2.5 Network Interfaces
+  </h4>
+  <p>
+   网络层支持通过多个承载层来收发消息，每个bearer可以通过network interfaces与网络层连接。同一个节点内部的不同element间的消息传送是通过local interfaces实现的。
+  </p>
+  <p>
+   举个例子，比如一个节点可能存在三个interfaces，一个用来通过advertising bearers收发消息；另外两个通过GATT bearers收发消息。
+  </p>
+  <p>
+   Interface 可以提供filter（过滤器）用来控制消息的进出规则。
+  </p>
+  <h4 id="3251-interface-input-filter">
+   3.2.5.1 Interface input filter
+  </h4>
+  <p>
+   用来确定进来的消息是丢弃还是传送到网络层。
+  </p>
+  <h4 id="3252-interface-output-filter">
+   3.2.5.2 Interface output filter
+  </h4>
+  <p>
+   用来确定出去的消息是被丢弃还是被传送到承载层。
+  </p>
+  <p>
+   当TTL的值为1时，会丢弃所有要传送到承载层的消息。
+  </p>
+  <h4 id="3253-local-network-interface">
+   3.2.5.3 Local network interface
+  </h4>
+  <p>
+   这用来在一个节点内部的不同element之间传送消息。当该interface受到消息时，会将消息传送到节点内的所有element.
+  </p>
+  <h4 id="3254-advertising-bearer-network-interfaces">
+   3.2.5.4 Advertising bearer network interfaces
+  </h4>
+  <p>
+   该interface允许通过advertising bearer传送消息。
+  </p>
+  <p>
+   当收到一个消息且消息没有被标记中继消息时，Advertising bearer network interface会使用Network Transmit state的值在advertisng bearer上传送该消息。
+  </p>
+  <p>
+   当收到一个消息且被标记为中继消息，Advertising bearer network interface会使用Relay Transmit state的值在advertisng bearer上传送该消息。
+  </p>
+  <h3 id="326-network-layer-behavior">
+   3.2.6 Network layer behavior
+  </h3>
+  <h4 id="3261-relay-feature">
+   3.2.6.1 Relay feature
+  </h4>
+  <p>
+   中继特性指的是将从advertising bearer收到的Network PDU进行转发。该特性是选配的，可以启用或者不启用。如果支持代理特性，那么节点应该同时支持GATT和advertising两种bearer(承载层)。
+  </p>
+  <h4 id="3262-proxy-feature">
+   3.2.6.2 Proxy feature
+  </h4>
+  <p>
+   用来转发在GATT和advertising bearer之间传送的消息。
+  </p>
+  <h4 id="3263-network-pdu">
+   3.2.6.3 接收network PDU
+  </h4>
+  <p>
+   消息是通过network interface从bearer layer 传送到network layer。网络层可以对消息标记一些附加的标签，以供后续使用。
+  </p>
+  <p>
+   当网络层收到消息时，会首先检查NID的值是否匹配已知的NID值，若不匹配则忽略该消息。若可以匹配已知的NID，则节点会根据相匹配的Network Key来认证该消息。如果认证成功，而且SRC、DST是有效的，且网络层消息缓存中没有该消息，那么消息会被传送到下传输层被继续处理。
+  </p>
+  <p>
+   消息被转发时，其中的IV index应该与收到时保持一致。
+  </p>
+  <p>
+   如果从advertising bearer传送过来的消息被传送到下传输层处理，且节点支持中继特性（并使能），TTL不小于2，目的地址不是本节点的unicast address，那么TTL的值减1，Network PDU被标记为relay，Network PDU被重发向所有连接到advertising bearer的网络接口（network interfaces）。建议在收到Network PDU后，加一个任意时间的小延时，再进行转发。这样可以避免多次中继同时发生。
+  </p>
+  <p>
+   如果从GATT承载层传过来的消息被传送到下传输层处理，节点支持并使能了代理特性，TTL不小于2，目的地址不是本节点的unicast，那么TTL减1，并且Network PDU重发到所有的network interfaces。
+  </p>
+  <p>
+   如果从advertsing bearer传过来的消息被下传输层处理，并且代理特性被支持使能，TTL不小于2，目的地址不是本节点的unicast address，那么TTL减1，并且Network PDU将会被重发到所有连接GATT bearer的网络接口。
+  </p>
+  <h3 id="33-lower-transport-layer">
+   3.3 Lower Transport Layer 下传输层
+  </h3>
+  <p>
+   下传输层从上传输层获取Upper Transport PDU，并将其转发至对等的下传输层。这些Upper Transport PDU可以被装进一个单独的Lowwer Transport PDU，也可能被分割为多个。当下传输层受到消息时，会处理Lower Transport PDUs，将重组分片的PDU，一旦完成便将PDU发送到上传输层。
+  </p>
+  <h4 id="331">
+   3.3.1 字节序
+  </h4>
+  <p>
+   该层使用大端
+  </p>
+  <h4 id="332-lower-transport-pdu">
+   3.3.2 Lower Transport PDU
+  </h4>
+  <p>
+   Lower Transport PDU 用来转发上传输层PDU到其他节点。下传输层PDU最高位是SEG域，SEG用来确定PDU是否被分片。如下表所示：
+  </p>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      CTL
+     </th>
+     <th>
+      SEG
+     </th>
+     <th>
+      Lower Transport PDU
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      0
+     </td>
+     <td>
+      0
+     </td>
+     <td>
+      未分片access message
+     </td>
+    </tr>
+    <tr>
+     <td>
+      0
+     </td>
+     <td>
+      1
+     </td>
+     <td>
+      分片的access message
+     </td>
+    </tr>
+    <tr>
+     <td>
+      1
+     </td>
+     <td>
+      0
+     </td>
+     <td>
+      未分片的control message
+     </td>
+    </tr>
+    <tr>
+     <td>
+      1
+     </td>
+     <td>
+      1
+     </td>
+     <td>
+      分片的control message
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <h4 id="3321-unsegmented-access-message">
+   3.3.2.1  Unsegmented Access message
+  </h4>
+  <p>
+   数据格式如下：
+  </p>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      Field
+     </th>
+     <th>
+      Size(bits)
+     </th>
+     <th>
+      Notes
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      SEG
+     </td>
+     <td>
+      1
+     </td>
+     <td>
+      0=Unsegmented, 1=segmented
+     </td>
+    </tr>
+    <tr>
+     <td>
+      AKF
+     </td>
+     <td>
+      1
+     </td>
+     <td>
+      Applicatoin Key Flag
+     </td>
+    </tr>
+    <tr>
+     <td>
+      AID
+     </td>
+     <td>
+      6
+     </td>
+     <td>
+      application Key identifier
+     </td>
+    </tr>
+    <tr>
+     <td>
+      Upper Transport Access PDU
+     </td>
+     <td>
+      40 to 120
+     </td>
+     <td>
+      上传输层PDU
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <p>
+   AKF和AID是被上传输层根据application key 或 device key设置的，用来加密access payload。
+  </p>
+  <p>
+   这时消息是没有SZMIC域的，因为上传输层的TransMIC是32-bit的，SZMIC是0，也就不需要单独设置了。
+  </p>
+  <h4 id="3322-segmented-access-message">
+   3.3.2.2 Segmented Access message
+  </h4>
+  <p>
+   数据格式如下：
+  </p>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      Field
+     </th>
+     <th>
+      Size(bits)
+     </th>
+     <th>
+      Notes
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      SEG
+     </td>
+     <td>
+      1
+     </td>
+     <td>
+      0=Unsegmented, 1=segmented
+     </td>
+    </tr>
+    <tr>
+     <td>
+      AKF
+     </td>
+     <td>
+      1
+     </td>
+     <td>
+      Applicatoin Key Flag
+     </td>
+    </tr>
+    <tr>
+     <td>
+      AID
+     </td>
+     <td>
+      6
+     </td>
+     <td>
+      application Key identifier
+     </td>
+    </tr>
+    <tr>
+     <td>
+      SZMIC
+     </td>
+     <td>
+      1
+     </td>
+     <td>
+      Size of TransMIC
+     </td>
+    </tr>
+    <tr>
+     <td>
+      SegZero
+     </td>
+     <td>
+      13
+     </td>
+     <td>
+      Least signification bits of SeqAuth
+     </td>
+    </tr>
+    <tr>
+     <td>
+      SegO
+     </td>
+     <td>
+      5
+     </td>
+     <td>
+      Segment Offset number
+     </td>
+    </tr>
+    <tr>
+     <td>
+      SegN
+     </td>
+     <td>
+      5
+     </td>
+     <td>
+      Last Segment number
+     </td>
+    </tr>
+    <tr>
+     <td>
+      Segment m
+     </td>
+     <td>
+      8 to 96
+     </td>
+     <td>
+      Segment m of the Upper Transport Access PDU
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <p>
+   SZMIC表示上传输层PDU中TransMIC的size。0表示TransMIC是32-bit，1表示64-bit。
+  </p>
+  <p>
+   AKF和AID是被上传输层根据application key 或 device key设置的，用来加密access payload。
+  </p>
+  <p>
+   SeqZero是被上传输层设置的。
+  </p>
+  <p>
+   SegO域说明这是第几个分片，SegN表示总共有多少个分片。
+  </p>
+  <p>
+   Segment m就表示第m个分片的上传层PDU数据。
+  </p>
+  <p>
+   Access message中除了最后一个分片，其他所有分片都应该是12字节的（12
+   <em>
+    m 到 12
+   </em>
+   m+11）。最后一个分片就是从12*m到PDU最后
+  </p>
+  <p>
+   <strong>
+    Access Message的分片应该是12个字节划分一次
+   </strong>
+  </p>
+  <p>
+   同一个上传输层PDU分片产生的下传输层PDU应该具有相同的AKF, AID, SZMIC, SeqZero, and SegN。
+  </p>
+  <h4 id="3323-unsegmented-control-message">
+   3.3.2.3 Unsegmented Control Message
+  </h4>
+  <p>
+   Unsegmented Control Message 用来传输
+   <em>
+    Segmented Acknowledgment message
+   </em>
+   或者是Control message。
+  </p>
+  <p>
+   结构如下所示：
+  </p>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      Feild
+     </th>
+     <th>
+      Size(bits)
+     </th>
+     <th>
+      note
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      SEG
+     </td>
+     <td>
+      1
+     </td>
+     <td>
+      0=Unsegmented, 1=segmented
+     </td>
+    </tr>
+    <tr>
+     <td>
+      Opcode
+     </td>
+     <td>
+      7
+     </td>
+     <td>
+      0x00 = Segment Acknowlegment ; 0x01 to 0x7F = Opcode of Transport Control message
+     </td>
+    </tr>
+    <tr>
+     <td>
+      Paramenters
+     </td>
+     <td>
+      0 to 88
+     </td>
+     <td>
+      Parameters for the Transport Control message
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <h5 id="33231-segmented-acknowledgment-message">
+   3.3.2.3.1 Segmented Acknowledgment message
+  </h5>
+  <p>
+   Segmented Acknowledgment message是下传输层用来确认分片收到的。
+  </p>
+  <p>
+   <img alt="" src="pic/pic_Segmented_acknowlegment.png"/>
+  </p>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      Feild
+     </th>
+     <th>
+      Size(bits)
+     </th>
+     <th>
+      note
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      SEG
+     </td>
+     <td>
+      1
+     </td>
+     <td>
+      0=Unsegmented, 1=segmented
+     </td>
+    </tr>
+    <tr>
+     <td>
+      Opcode
+     </td>
+     <td>
+      7
+     </td>
+     <td>
+      0x00 = segment acknowledgment message
+     </td>
+    </tr>
+    <tr>
+     <td>
+      OBO
+     </td>
+     <td>
+      1
+     </td>
+     <td>
+      Friend on behalf of a Low Power node
+     </td>
+    </tr>
+    <tr>
+     <td>
+      SegZero
+     </td>
+     <td>
+      13
+     </td>
+     <td>
+      SeqZero of the Upper Transport PDU
+     </td>
+    </tr>
+    <tr>
+     <td>
+      RFU
+     </td>
+     <td>
+      2
+     </td>
+     <td>
+      Reserved for Future Use
+     </td>
+    </tr>
+    <tr>
+     <td>
+      BlockAck
+     </td>
+     <td>
+      32
+     </td>
+     <td>
+      Block acknowledgment for segments
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <p>
+   SEG为0
+  </p>
+  <p>
+   Opcode为0x00
+  </p>
+  <p>
+   如果消息是被目的地址的节点收到，则OBO为0；如果消息的目的地址的节点是一个低功耗节点，那么消息是被节点的友好节点收到的，这时OBO为1。
+  </p>
+  <p>
+   BlockAck用来表示分片收到的情况，最低位 bit 0 代表segment 0，最高位代表segment 31。如果bit n被设置为1，说明segment被节点收到了（或被低功耗节点的友好节点收到了）。
+  </p>
+  <h4 id="3324-segmented-control-message">
+   3.3.2.4 Segmented Control message
+  </h4>
+  <p>
+   数据格式如下：
+  </p>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      Field
+     </th>
+     <th>
+      Size(bits)
+     </th>
+     <th>
+      Notes
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      SEG
+     </td>
+     <td>
+      1
+     </td>
+     <td>
+      0=Unsegmented, 1=segmented
+     </td>
+    </tr>
+    <tr>
+     <td>
+      Opcode
+     </td>
+     <td>
+      7
+     </td>
+     <td>
+      0x00 = Segment Acknowlegment ; 0x01 to 0x7F = Opcode of Transport Control message
+     </td>
+    </tr>
+    <tr>
+     <td>
+      RFU
+     </td>
+     <td>
+      1
+     </td>
+     <td>
+      留给以后使用，保留位
+     </td>
+    </tr>
+    <tr>
+     <td>
+      SegZero
+     </td>
+     <td>
+      13
+     </td>
+     <td>
+      Least signification bits of SeqAuth
+     </td>
+    </tr>
+    <tr>
+     <td>
+      SegO
+     </td>
+     <td>
+      5
+     </td>
+     <td>
+      Segment Offset number
+     </td>
+    </tr>
+    <tr>
+     <td>
+      SegN
+     </td>
+     <td>
+      5
+     </td>
+     <td>
+      Last Segment number
+     </td>
+    </tr>
+    <tr>
+     <td>
+      Segment m
+     </td>
+     <td>
+      8 to 64
+     </td>
+     <td>
+      Segment m of the Upper Transport Control PDU
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <p>
+   SEG设为1
+  </p>
+  <p>
+   Opcode 被上传输层设置，用来表示parameters的格式。
+  </p>
+  <p>
+   The SeqZero field shall be set by the upper transport layer.
+  </p>
+  <p>
+   The Segment m field shall be set to the subset of octets from the Upper Transport Control PDU. Segment
+   <br/>
+   m shall be octets 8
+   <em>
+    m to 8
+   </em>
+   m+7, except for the last segment where it is 8*m to the end of the message.
+   <strong>
+    也就是说控制消息的分片长度是8个字节。
+   </strong>
+  </p>
+  <p>
+   来自同一个上传输层PDU的分片具有一致的Opcode, SeqZero, and SegN。
+  </p>
+  <h4 id="333">
+   3.3.3 分片和重组
+  </h4>
+  <p>
+   为了传输大于15个字节的上传输层PDU，下传输层会将PDU分片、重组，然后被发送到同级的下传输层上。传输分片时，会使用block acknowledgment message来减小下传输层所传输信息的大小。
+  </p>
+  <p>
+   <img alt="" src="pic/pic_Segment_reassembly.png"/>
+  </p>
+  <h5 id="3331">
+   3.3.3.1 分割
+  </h5>
+  <p>
+   下传输层可以将来自上传输层的PDU分片发送，需要注意的是，下传输层一次只能发送来自同一个上传输层PDU的分片。也就是说，只有当当前上传输层PDU的分片全部发送完必，并且收到对应的acknowledgment之后，才会发送下一个上传输层PDU的分片。还有一种情况就是，当前PDU分片发送被取消，这时会继续发送下一个PDU分片的发送。
+  </p>
+  <p>
+   当上传输层PDU可以装入一个未分片的下传输层PDU时，那么下传输层可以直接使用未分片喜爱哦戏传输该消息。如果上传输层PDU装入一个单一的分片下传输层PDU（就是只分了1个segment的分片消息），那么消息就可以使用单一分片的消息来传输该消息。
+  </p>
+  <p>
+   分片信息发送会有acknowledgment确认，但是未分片消息是没有的。因此一个使用单一分片来发送上传输层PDU比起使用未分片消息更加有效。
+  </p>
+  <p>
+   Each segment of the Upper Transport Access PDU shall be
+   <strong>
+    12 octets
+   </strong>
+   long with the exception of the last segment, which may be shorter
+  </p>
+  <p>
+   Each segment of the Upper Transport Control PDU shall be
+   <strong>
+    8 octets
+   </strong>
+   long with the exception of the last segment, which may be shorter.
+  </p>
+  <p>
+   分片的消息是通过SegO来识别的，通过SeqAuth来连接并认证。来源于同一个上传输层PDU的分片消息，都有小爱嗯他的IV index和SeqAuth值，这涌来加密和认证上传输层PDU。
+  </p>
+  <p>
+   SeqAuth是由IV index和第一个分片的sequence number(SEQ)组成的，是一个56-bit的值，其中IV index是其中的高位的字节，sequence number(SEQ)是其中的低位。只有最低13 bits(就是SeqZero）被包含进了分片消息。当重组一个完整的分片消息时，SeqAuth值可以从IV index、SeqZero和SEQ所派生出来。
+  </p>
+  <p>
+   举个例子，如果收到消息的SEQ是0x6471262，IV index是0x58437AF2，SeqZero是0x1849，那么SeqAuth就是0x58437AF2645849。
+  </p>
+  <h5 id="3332">
+   3.3.3.2 重组
+  </h5>
+  <p>
+   收到分片消息时，接收节点将会检查SeqAuth以确认对应的上传输层PDU是否被收到过。如果分片消息没有被收到过，那么接收的设备将会根据消息中的SegN字段来分配足够的内存，以存储上传输层的各个分片信息。
+  </p>
+  <p>
+   如果节点不支持低功耗特性，并且消息是发往一个unicast address，而此时节点不能接收该上传输层PDU（可能因为节点正忙，或是资源不足以重组该消息），那么节点将会通知该消息的源节点，通过发送一个BlockAck 0X00000000。
+  </p>
+  <p>
+   如果分片消息正在被处理，SegO字段决定分片重组时的位置，接收者将会更新BlockAck值来报告此分片发送成功。
+  </p>
+  <h5 id="3333-segmentation-behavior">
+   3.3.3.3 segmentation behavior 分片表现
+  </h5>
+  <p>
+   如果消息的目的地址是一个unicast address，那么下传输层会等待一个目的节点的Segment Acknoeledgment message，如果目的节点是一个低功耗节点，那么Segment Acknoeledgment message由其友好节点发送。
+  </p>
+  <p>
+   如果消息是被发往一个group address或者是一个虚拟地址的，那么下传输层会发送所有上传输层PDU对应的分片下传输层PDU。
+   <strong>
+    建议多次发送下传输层PDU，发送间隙引入随即的延时
+   </strong>
+  </p>
+  <p>
+   被发往group或者虚拟地址的上传输层PDU，不会收到acknowledgment，因此发送之后的状态是不知道。因此多发送几次可以确保成功发送的概率。
+  </p>
+  <p>
+   当下传输层PDU发送时，一个定时器将会被设置用以等待Segment Acknowledgment message ，定时器的最小值为
+   <em>
+    200+50*TTL
+   </em>
+   毫秒。
+  </p>
+  <p>
+   当收到一个确认分片收到的Segment Acknowledgment message时，下传输层将会重置定时器，并重新发送未确认的下传输层PDU分片。当收到Segment Acknowledgment message确认所有的分片都已成功接收后，上传输层PDU就发送成功啦。如果收到的Segment Acknowledgment message中BlockAck是0x00000000，那么上传输层会取消该消息的发送并通知更高层级该事件。
+  </p>
+  <p>
+   如果没有收到Segment Acknowledgment message确认，分片的下传输层PDU至少应该重传送两次。弱国下传输层在所有分片确认前停止了重传，那么上传输层PDU消息就被取消了。
+  </p>
+  <h5 id="3334-reassembly-behavior">
+   3.3.3.4 Reassembly behavior 重组表现
+  </h5>
+  <p>
+   下传输层有一个sequence authentication value（SeqAuth），每个源节点设备有一个与之对应的block acknowledgment value。
+  </p>
+  <p>
+   如果下传输层收到一个分片消息，但是消息的SeqAuth值比当前的sequence authentication value值小，那么就会忽略该消息。如果下传输层收到一个新的消息，那么就会将消息中的SeqAuth保存为新的sequence authentication value。
+  </p>
+  <p>
+   Sequence authentication value逻辑上包含了IV index，因此如果下传输层收到了的消息是使用之前的IV index的，那么该消息的SeqAuth值就会比当前的sequence authentication value小。
+  </p>
+  <p>
+   如果下传输层收到一个分片消息，但是节点不能接收该多片消息（可能因为节点繁忙或是内存不足以容纳多篇消息等原因），如果消息是发往一个unicast address，那么下传输层就会返回一个Segment Acknowledgment message，其中 BlockAck 设置为 0x00000000。
+  </p>
+  <p>
+   如果下传输层收到的分片消息中SeqAuth值比当前的sequence authentication value要大，那么下传输层就会启动一个“不完整计时器”，该定时器定义了下传输层等待具备相同SeqAuth值消息的时间，最小为10秒。
+  </p>
+  <p>
+   如果下传输层收到的分片消息中SeqAuth值比当前的sequence authentication value要大，同时消息的目的地址是一个unicast address，那么下传输层就会启动一个acknowledgment定时器，该定时器定义了下传输层发送Segment Acknowledgment message的时间，最小设置为
+   <em>
+    150+50*TTL
+   </em>
+   毫秒。
+  </p>
+  <p>
+   如果下传输层收到另一个对应当前 sequence authentication value的消息片，且此时acknowledgment定时器未活动，那么就会重启acknowledgment定时器。
+  </p>
+  <p>
+   如果下传输层收到对应当前 sequence authentication value的消息片，且此时不完整计时器正在活动，那么重启该定时器。
+  </p>
+  <p>
+   下传输层会在block acknowledgment value中标记每一个片段，以便于后面将其发送给源节点。
+  </p>
+  <p>
+   当某个消息的所有片段都收到后，下传输层会发送确认消息给源节点，并去取消不完整定时器和acknowledgment定时器，然后向上传输层发送重组消息。
+  </p>
+  <p>
+   如果acknowledgment定时器超时，下传输层会发送一个Segment Acknowledgment message给源节点。
+  </p>
+  <p>
+   如果不完整计时器超时，下传输层会认为消息接受失败，取消acknowledgment定时器。任何分片消息会被忽略。
+  </p>
+  <p>
+   如果下传输层收到了其他消息片段，而此时分片的消息已经全部收到了，那么将会给源节点发送Segment Acknowledgment message。如果节点是作为一个低功耗节点的友好节点存在的，那么Segment Acknowledgment message中的OBO字段会被设置为1。表示消息已经缓存在友好节点的队列中等待低功耗节点来轮询获取了。反之，则OBO设置为1。
+  </p>
+  <h4 id="334-friend-queue">
+   3.3.4 Friend Queue
+  </h4>
+  <p>
+   友好节点对每一个与其建立联系的低功耗节点都有一个友好队列（Friend Queue），这个友好队列就存储了以低功耗节点为目的地址的消息，等待低功耗节点来轮询请求。
+  </p>
+  <p>
+   当一个友好节点收到消息，且该消息是发往一个与之建立联系的低功耗节点，消息中的TTL字段不小于2，那么TTL的值减1，然后消息存储在该友好节点的友好队列中。
+  </p>
+  <p>
+   如果消息是分片的，消息会先在上传输层完成重组，友好节点向源节点发送Segment Acknowledgment message确认消息，然后才会将消息存储到友好队列中。
+  </p>
+  <p>
+   如果友好队列满了，并且新消息需要被保存，那么最老的消息将会被覆盖，以为新消息腾出地方。（
+   <strong>
+    这句话可能理解的不对，原文是下面一段话
+   </strong>
+   ）
+  </p>
+  <p>
+   If the Friend Queue is full and a new message needs to be stored that is not a Friend Update message, the oldest entries other than a Friend Update message shall be discarded to make room for the new message.
+  </p>
+  <p>
+   如果要被存储的消息是一个 Segment Acknowledgment 消息，并且友好队列中已经有一个 Segment Acknowledgment 消息了，两消息的源地址、目的地址一样而且用着相同的SeqAuth值，但是IV或者是sequence number比老消息更小，那么老的消息将会被清除。
+  </p>
+  <p>
+   如果友好节点需要security更新，那么要向友好队列中添加一个Friend Update消息。
+  </p>
+  <p>
+   低功耗节点向友好节点发送Friend Poll消息时，若此时友好队列为空，那么需要友好节点向友好队列中添加一个Friend Update 消息，然后此消息就可以回应给低功耗节点啦。
+  </p>
+  <h3 id="34-upper-trnsport-layer">
+   3.4 Upper trnsport layer 上传输层
+  </h3>
+  <p>
+   上传输层从访问层（access layer ）获取消息或者是自己生成上传输层控制消息（upper transport layer Control message ），并将这些消息传送给同级的上传输层。
+  </p>
+  <p>
+   对于从访问层获取的消息，消息的加密和认证是使用application key实现的。这允许上传输层认证收到的消息。
+  </p>
+  <p>
+   传输层控制消息是上传输层内部产生的，只能在网络层加密和认证。
+  </p>
+  <h4 id="341">
+   3.4.1 字节序
+  </h4>
+  <p>
+   大端字节序
+  </p>
+  <h4 id="342-upper-transport-access-pdu">
+   3.4.2 Upper Transport Access PDU
+  </h4>
+  <p>
+   在Network PDU中，当CTL字段是0时表示Upper Transport Access PDU中装的是从访问层获取的access payload。
+  </p>
+  <p>
+   access payload 使用application key或者device key加密，加密的access payload和相关的信息完整性检查值都放在Upper Transport Access PDU中。
+  </p>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      Field Name
+     </th>
+     <th>
+      Octects
+     </th>
+     <th>
+      Notes
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      Encrypted Access Payload
+     </td>
+     <td>
+      1 to 380
+     </td>
+     <td>
+      The encrypted access payload
+     </td>
+    </tr>
+    <tr>
+     <td>
+      TransMIC
+     </td>
+     <td>
+      4 or 8
+     </td>
+     <td>
+      The message integrity check value for the access payload
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <h5 id="3421-encrypted-access-payload">
+   3.4.2.1 Encrypted access payload
+  </h5>
+  <p>
+   Access payload是访问层提供的，如果TranMIC是32-bit的，access payload最长可以是380字节。如果TranMIC是64-bit的，access payload可以最长374字节。在上传输层中，access payload是不可见的，这个字段的所有信息都不能使用。
+  </p>
+  <h5 id="3422-transmic">
+   3.4.2.2 TransMIC
+  </h5>
+  <p>
+   信息完整性检查（ Message Integrity Check for Transport ，TransMIC）是一个32位或64位的数，用来认证access payload是否被破坏。对于分片消息（SEG=1），TransMIC的长度是由下传输层PDU中的SZMIC 字段决定的。对于未分片的消息，数据信息的TransMIC是32位的。
+  </p>
+  <p>
+   <strong>
+    注意：控制消息是没有TransMIC的
+   </strong>
+  </p>
+  <h4 id="343-upper-transport-control-pdu">
+   3.4.3 Upper Transport Control PDU
+  </h4>
+  <p>
+   若CTL位是1，那么上传输层就装载一个控制消息。传输层控制消息有一个7位的操作码，该操作码用来定义参数的格式。操作码没有包含在参数字段中，但是在每一个分片或未分片的控制消息，其下传输层PDU中都有操作码。
+  </p>
+  <p>
+   下传输层可能会将消息分割个几个小的PDU，以便于在网络层传输。因此建议根据下面这个表的格式，保持传输控制PDU的大小，表中的值代表根据包的数量而建议的参数域最大的长度。（本段理解可能不对，原文如下）
+  </p>
+  <p>
+   The lower transport layer may segment messages into smaller PDUs for delivery over the network layer. It is therefore recommended to keep Transport Control PDU payload size as reflected in Table 3.16, where the values represent the maximum useful parameter field sizes depending on the number of packets.
+  </p>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      Numbers of Packets
+     </th>
+     <th>
+      Transpotr Control PDU Payload Size
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      1
+     </td>
+     <td>
+      11(Unsegmented)
+     </td>
+    </tr>
+    <tr>
+     <td>
+      1
+     </td>
+     <td>
+      8(segmented)
+     </td>
+    </tr>
+    <tr>
+     <td>
+      2
+     </td>
+     <td>
+      16
+     </td>
+    </tr>
+    <tr>
+     <td>
+      3
+     </td>
+     <td>
+      24
+     </td>
+    </tr>
+    <tr>
+     <td>
+      n
+     </td>
+     <td>
+      n*8
+     </td>
+    </tr>
+    <tr>
+     <td>
+      32
+     </td>
+     <td>
+      256
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <p>
+   <strong>
+    Upper Transport Control PDU的最大长度是256字节
+   </strong>
+  </p>
+  <h4 id="344-upper-transport-layer-behavior">
+   3.4.4 Upper transport layer behavior
+  </h4>
+  <h5 id="3441-transmitting-an-access-payload">
+   3.4.4.1 Transmitting an access payload
+  </h5>
+  <p>
+   所有access message在application key或是device key的上下文中被传递。access payload使用application key 或者 device key 加密，TransMIC设置信息完整性检查的值。
+  </p>
+  <p>
+   Sequence number(SEQ) 会被发配到消息中，在被下传输层中分片的消息中，SEQ是SeqAuth的底24位。
+  </p>
+  <p>
+   下传输层PDU中的AKF和AID字段是根据application key 或者device key来设置的。如果一个application key被使用，那么AKF被设置为1，并且AID字段被设置为application key identifier（AID）。如果device key被使用，那么AKF字段被设置为0，且AID设置i为0b000000。
+  </p>
+  <h5 id="3442-receiving-an-upper-transport-pdu">
+   3.4.4.2  Receiving an Upper Transport PDU
+  </h5>
+  <p>
+   收到Receiving an Upper Transport  Access PDU时，access payload会被解密，TransMIC会被用来认证消息。如果PDU通过认证并通过完整性检查，该消息将会传送到access层。
+  </p>
+  <h4 id="345-transport-control-messages">
+   3.4.5 Transport Control messages
+  </h4>
+  <p>
+   Transport Control messages可以通过分片的控制消息或是单一的未分片控制信息传送，不管用哪种方式，每个消息都有一个7位的操作码用来确定参数域的格式。每一个传输控制消息都应该以最小数量的下传输层PDU传送。
+  </p>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      Value
+     </th>
+     <th>
+      Opcode
+     </th>
+     <th>
+      Notes
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      0x00
+     </td>
+     <td>
+      –
+     </td>
+     <td>
+      Reserved for lower transport layer
+     </td>
+    </tr>
+    <tr>
+     <td>
+      0x01
+     </td>
+     <td>
+      Friend Poll
+     </td>
+     <td>
+      Sent by a Low Power node to its Friend node to request any messages that it has stored for the Low Power node
+     </td>
+    </tr>
+    <tr>
+     <td>
+      0x02
+     </td>
+     <td>
+      Friend Update
+     </td>
+     <td>
+      Sent by a Friend node to a Low Power node to inform it about security updates
+     </td>
+    </tr>
+    <tr>
+     <td>
+      0x03
+     </td>
+     <td>
+      Friend Request
+     </td>
+     <td>
+      Sent by a Low Power node the all-friends fixed group address to start to find a friend
+     </td>
+    </tr>
+    <tr>
+     <td>
+      0x04
+     </td>
+     <td>
+      Friend Offer
+     </td>
+     <td>
+      Sent by a Friend node to a Low Power node to offer to become its friend
+     </td>
+    </tr>
+    <tr>
+     <td>
+      0x05
+     </td>
+     <td>
+      Friend Clear
+     </td>
+     <td>
+      Sent to a Friend node to inform a previous friend of a Low Power node about the removal of a friendship
+     </td>
+    </tr>
+    <tr>
+     <td>
+      0x06
+     </td>
+     <td>
+      Friend Clear  Confirm
+     </td>
+     <td>
+      Sent from a previous friend to Friend node to confirm that a prior friend relationship has been removed
+     </td>
+    </tr>
+    <tr>
+     <td>
+      0x07
+     </td>
+     <td>
+      Friend Subscription List Add
+     </td>
+     <td>
+      Sent to a Friend node to add one or more addresses to the Friend Subscription List
+     </td>
+    </tr>
+    <tr>
+     <td>
+      0x08
+     </td>
+     <td>
+      Friend Subscription List Remove
+     </td>
+     <td>
+      Sent to a Friend node to remove one or more addresses from the Friend Subscription List
+     </td>
+    </tr>
+    <tr>
+     <td>
+      0x09
+     </td>
+     <td>
+      Friend Subscription List Confirm
+     </td>
+     <td>
+      Sent by a Friend node to confirm Friend Subscription List updates
+     </td>
+    </tr>
+    <tr>
+     <td>
+      0x0A
+     </td>
+     <td>
+      Heartbeat
+     </td>
+     <td>
+      Sent by a node to let other nodes determine topology of a subnet
+     </td>
+    </tr>
+    <tr>
+     <td>
+      0x0B–0x7F
+     </td>
+     <td>
+      RFU
+     </td>
+     <td>
+      Reserved for Future Use
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <h3 id="35-access-layer">
+   3.5 Access Layer 访问层
+  </h3>
+  <h4 id="351">
+   3.5.1 字节序
+  </h4>
+  <p>
+   从本层级开始，字节序为小端字节序
+  </p>
+  <h4 id="352-model-identifier">
+   3.5.2 Model identifier 模型识别器
+  </h4>
+  <p>
+   Model可以被唯一的识别器所识别，蓝牙官方组织定义的模型识别器是16位的，厂商定义的模型识别器是32位的，在SIG的基础上加入了16位的厂商信息。
+  </p>
+  <h4 id="353-access-payload">
+   3.5.3 Access Payload
+  </h4>
+  <p>
+   格式定义如下：
+  </p>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      Field Name
+     </th>
+     <th>
+      Size (octets)
+     </th>
+     <th>
+      Notes
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      Opcode
+     </td>
+     <td>
+      1, 2, or 3
+     </td>
+     <td>
+      Operation Code
+     </td>
+    </tr>
+    <tr>
+     <td>
+      Parameters
+     </td>
+     <td>
+      0 to 379
+     </td>
+     <td>
+      Application Parameters
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <p>
+   access payload最多被分割为32个12字节的片段（包含TranMIC字段），若TranMIC是4个字节长度，那么payload最长可以到达380字节，如果此时操作码只有一个字节的话，那么parameter字段的最大长度是379。
+  </p>
+  <p>
+   下传输层可能会将PDU分割为多个小的数据包以便于承载层传输，下表列出了根据包的数量而建议的常用的包大小。
+  </p>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      Nunber 0f Packets
+     </th>
+     <th>
+      maxium useful access payload size(octets) with 32-bit TransMIC
+     </th>
+     <th>
+      maxium useful access payload size(octets) with 64-bit TransMIC
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      1
+     </td>
+     <td>
+      11(unsegmented)
+     </td>
+     <td>
+      n/a
+     </td>
+    </tr>
+    <tr>
+     <td>
+      1
+     </td>
+     <td>
+      8(segmented)
+     </td>
+     <td>
+      4(segmented)
+     </td>
+    </tr>
+    <tr>
+     <td>
+      2
+     </td>
+     <td>
+      20
+     </td>
+     <td>
+      16
+     </td>
+    </tr>
+    <tr>
+     <td>
+      3
+     </td>
+     <td>
+      32
+     </td>
+     <td>
+      28
+     </td>
+    </tr>
+    <tr>
+     <td>
+      n
+     </td>
+     <td>
+      (n*12)-4
+     </td>
+     <td>
+      (n*12)-8
+     </td>
+    </tr>
+    <tr>
+     <td>
+      32
+     </td>
+     <td>
+      380
+     </td>
+     <td>
+      376
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <h5 id="3531">
+   3.5.3.1 操作码
+  </h5>
+  <p>
+   操作码可以是1、2或3个字节序列，操作码的第一个字节决定了使用字节的数量。
+  </p>
+  <p>
+   如果操作码第一个字节的最高位是0,那么操作码只包含一个字节；如果最高两位是0b10，那么操作码包含2个字节；如果最高的两位是0b11,那么操作码包含3个字节。
+  </p>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      操作码第一个字节格式
+     </th>
+     <th>
+      Notes
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      0b0xxxxxxx
+     </td>
+     <td>
+      1-octet Opcodes
+     </td>
+    </tr>
+    <tr>
+     <td>
+      0b01111111
+     </td>
+     <td>
+      保留，以后使用
+     </td>
+    </tr>
+    <tr>
+     <td>
+      0b10xxxxxx
+     </td>
+     <td>
+      2-octet Opcodes
+     </td>
+    </tr>
+    <tr>
+     <td>
+      0b11xxxxxx
+     </td>
+     <td>
+      3-octet Opcodes
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <p>
+   1-octet 操作码是蓝牙SIG定义的应用操作码，最多可以定义127个1-octet操作码，0x7F是保留给未来使用的。
+  </p>
+  <p>
+   2-octet 也是蓝牙SIG定义的应用操作码，最多可以定位16384个2-octet 操作码。
+  </p>
+  <p>
+   3-octet操作码是供制造商使用的操作码，每一个公司共有64个3-octet操作码。
+  </p>
+  <h5 id="3532">
+   3.5.3.2 应用参数
+  </h5>
+  <p>
+   参数字段是对应每个操作码定义了，后面会详细介绍，参数字段可以是0个字节长度。
+  </p>
+  <h4 id="354-access-layer-behavior">
+   3.5.4 Access layer behavior
+  </h4>
+  <h5 id="3541-access-message">
+   3.5.4.1 发送access message
+  </h5>
+  <p>
+   消息被一个模型发往一个目的地址，目的地址可以时unicast address、group address或者是虚拟地址。
+  </p>
+  <p>
+   消息源地址必须是产生该消息的element的unicast address。
+  </p>
+  <p>
+   TTL字段可以被应用设置为它所希望消息在节点之间跳转的次数。如果没有设置TTL，那么访问层将会使用默认的TTL。
+  </p>
+  <p>
+   访问层不保证消息的成功传送，每个模型都应该决定消息是否应该被重复传以及潜在重复数据的处理。
+  </p>
+  <p>
+   如果要发送的消息是对已接收消息的回复，若已接收消息是发往unicast address的，那么应该在发响应消息包时使用20到50毫秒的随机延时。假如已接收消息是发往虚拟地址或者group address的，那么发送响应消息包应该假如20到500毫秒的随机延时。通过假如随机延时，可以降低多节点同时响应消息的概率，因而降低消息冲突。
+  </p>
+  <p>
+   因为网络中的所有节点以及其他蓝牙设备是共享有限的带宽的，因此有必要观察节点的流量。在10秒的窗口内，一个节点应该产生小于100个下传输层PDU。
+  </p>
+  <h5 id="3542-access-message">
+   3.5.4.2 接收access message
+  </h5>
+  <p>
+   以下几点全部满足时，消息会被传送到model来处理，
+  </p>
+  <ul>
+   <li>
+    操作码属于目的地址模型的element
+   </li>
+   <li>
+    目的地址设置为模型element的unicast address或者是的element订阅的group address 或是virtual address。
+   </li>
+   <li>
+    model绑定到了用于消息传输的application key或是device key。
+   </li>
+  </ul>
+  <h5 id="3543-security-considerations">
+   3.5.4.3 Security considerations 安全注意事项
+  </h5>
+  <p>
+   消息是被上传输层就加密和认证的，一个节点产生的消息应该使用为本Model配置的application key 或者是device key。
+  </p>
+  <p>
+   响应消息应该使用与相关消息相同的key。
+  </p>
+  <h5 id="3544-message-error-procedure">
+   3.5.4.4 Message error procedure
+  </h5>
+  <p>
+   当收到一个不能解析的消息时，就会忽略该消息。
+  </p>
+  <p>
+   消息不能解析包含以下几种情况：
+  </p>
+  <ul>
+   <li>
+    application opcode 不能被接受消息的element理解
+   </li>
+   <li>
+    access message 长度不正确
+   </li>
+   <li>
+    application parameters包含当前被禁用的值
+   </li>
+  </ul>
+  <h4 id="355-unacknowledged-and-acknowledged-messages">
+   3.5.5 Unacknowledged and acknowledged messages
+  </h4>
+  <p>
+   在访问层，消息可以被定义为Unacknowledged或者是acknowledged。
+  </p>
+  <h5 id="3551-unacknowledged-message">
+   3.5.5.1 Unacknowledged message
+  </h5>
+  <p>
+   当应用觉得同级节点需要知道状态变化时，会发送一个status message。状态消息被发往与state关联的模型的发布地址，Unacknowledged message是没有回应消息的，因此不会知道已发送的消息是否被成功发送或是是否被处理。
+  </p>
+  <h5 id="3552-acknowledged-message">
+   3.5.5.2 Acknowledged message
+  </h5>
+  <p>
+   Acknowledged message会被每一个接收该消息的节点回应，回应消息通常是status message。如果在一定时间内没有收到回应消息，会重发消息，等待时间是由application确定的。
+  </p>
+  <p>
+   如果消息是被发往多个节点的，比如目的地址group address，节点可能不知道有多少接收节点会回应该消息。不建议向所有节点发送Acknowledged message。为了增加成功发送的概率，发送节点需要确定消息重发次数。
+  </p>
+  <p>
+   如果发送节点没有收到回应消息，那么节点会认为消息没有发送。Acknowledged message超时时间应该最少设置为30秒，值由应用设置。当一个Acknowledged message发送给model，他应该发送一个回应消息以确认该消息被接收。回应消息可以包含状态信息，回应消息是 unacknowlwdged message。回应消息的目的地址应该被设置为Acknowledged message的源地址。如果Acknowledged message的TTL字段是0，那么也建议回应消息的TTL也设置为0。
+  </p>
+  <h4 id="356-publish-and-subscribe">
+   3.5.6 Publish and subscribe发布与订阅
+  </h4>
+  <p>
+   发布与订阅是通过目的地址来实现的，目的地址的配置管理在更高层级的规范中。
+  </p>
+  <h5 id="3561-publish">
+   3.5.6.1 Publish
+  </h5>
+  <p>
+   一个Model发布数据如果它向目的地址转发一个无关消息，消息可以被转发到的地址可以是unicast address, group address或者是virtual address。节点中的没有个Model都有一个发布地址。
+  </p>
+  <h6 id="35611-state-transitions">
+   3.5.6.1.1 State transitions 状态转变
+  </h6>
+  <p>
+   element的状态可以立刻转变或是经历一段时间转变为新的状态，如下图所示。
+  </p>
+  <p>
+   <img alt="" src="pic/pic_state_transition.png"/>
+  </p>
+  <p>
+   状态从初始状态转变为新状态所需要的时间被称为转变时间。从当前状态到目标状态的时间成为保持时间。当收到一个设置状态的消息时，新的值不会立即生效，状态值会被存储起来作为目标状态。一个状态消息可以在任何时间被发出，状态消息中会包含当前的状态。
+  </p>
+  <h6 id="35612-state-change-publishing">
+   3.5.6.1.2 State change publishing 状态转变发布
+  </h6>
+  <p>
+   发布状态转变的消息是通过设置Model Publication state来实现的。当model使能发布时，状态改变完成时就会发送相关的状态改变信息。对于状态转变时间超过2秒的情况，建议增加一个状态发布在状态转变开始后1秒内。
+  </p>
+  <h6 id="35613">
+   3.5.6.1.3 周期发布
+  </h6>
+  <p>
+   model可以配置为周期性的发送状态消息，无论状态是否变化。这是通过 Publish Period实现的。当Publish Period设为非零值时，状态消息会周期性发布。
+  </p>
+  <h5 id="3562-subscribe">
+   3.5.6.2 Subscribe 订阅
+  </h5>
+  <p>
+   每个model都有一个或多个订阅列表，订阅列表中包含一个或多个地址。订阅地址可以是group address 或者是virtual address。
+  </p>
+  <h4 id="357-example-message-sequence-charts">
+   3.5.7 Example message sequence charts
+  </h4>
+  <h5 id="3571-acknowledged-get">
+   3.5.7.1 Acknowledged Get
+  </h5>
+  <p>
+   下图说明了一个client获取server的状态
+  </p>
+  <p>
+   <img alt="" src="pic/pic_acknowledge_get.png"/>
+  </p>
+  <h5 id="3572-acknowledged-set">
+   3.5.7.2 Acknowledged Set
+  </h5>
+  <p>
+   下图说明client使用Acknowledged Set消息对server的状态进行设置，client会收到server的回应消息，如果server设置了状态发布，那么可以发布状态消息。如果client订阅了server的发布地址，那么client端会收到两个状态消息。
+  </p>
+  <p>
+   <img alt="" src="pic/pic_acknowledge_set.png"/>
+  </p>
+  <h5 id="3573-unacknowledged-set">
+   3.5.7.3 Unacknowledged Set
+  </h5>
+  <p>
+   client可以使用Unacknowledged Set消息设置server的状态，如下图所示。
+  </p>
+  <p>
+   <img alt="" src="pic/pic_unacknowledge_set.png"/>
+  </p>
+  <h5 id="3574-acknowledged-set-with-periodic-publishing">
+   3.5.7.4 Acknowledged set with periodic publishing
+  </h5>
+  <p>
+   client使用Acknowledged Set消息对server的状态进行设置，server启用周期性状态发布。
+  </p>
+  <p>
+   <img alt="" src="pic/pic_acknowledge_set_publish.png"/>
+  </p>
+  <h3 id="36-mesh-security">
+   3.6 Mesh Security
+  </h3>
+  <h4 id="361-endianness">
+   3.6.1 Endianness 字节序
+  </h4>
+  <p>
+   在本层使用多字节字段使用大端字节序。
+  </p>
+  <h4 id="362-security-toolbox">
+   3.6.2 Security toolbox
+  </h4>
+  <h5 id="3621-encrption-function">
+   3.6.2.1 Encrption  function 加密函数
+  </h5>
+  <p>
+   加密函数具体可以查看《Volume 3, Part H, Section 2.2.1 of the Core Specification》，其形式如下：
+  </p>
+  <p>
+   <mathjax>
+    $$ ciphertext = e (key, plaintext) $$
+   </mathjax>
+  </p>
+  <h5 id="3622-cmac-function">
+   3.6.2.2 CMAC function
+  </h5>
+  <p>
+   Cipher-based Message Authentication Code (CMAC) 使用AES-128作为block cipher函数，也被称为 AES-CMAC。
+  </p>
+  <p>
+   <mathjax>
+    $$ MAC = AES - CMAC_k(m) $$
+   </mathjax>
+  </p>
+  <p>
+   其中k是一个128-bit的key值，m是需要被认证的可变长度的数据。
+  </p>
+  <h5 id="3623-ccm-funtion">
+   3.6.2.3 CCM funtion
+  </h5>
+  <p>
+   RFC3610 defines the AES Counter with CBC-MAC (CCM) (see Volume 6, Part E, Section 1 of the Core Specification ).
+  </p>
+  <p>
+   <mathjax>
+    $$ ciphertext, mic = AES-CCM_k (n, m, a) $$
+   </mathjax>
+  </p>
+  <p>
+   其中，k是128-bit的key值，n是一个104-bit的nonce，m是要被加密认证的可变长度数据（plaintext），a是要被认证的可变长度数据（additional data）；ciphertext加密之后的加密后的数据，mic是信息完整性检查的值。
+  </p>
+  <h5 id="3624-s1-salt-generation-function">
+   3.6.2.4 s1 SALT generation function
+  </h5>
+  <p>
+   <mathjax>
+    $$ s1(M) = AES-CMAC_{ZERO} (M) $$
+   </mathjax>
+  </p>
+  <p>
+   其中，M是一个长度非0的字节序列或者是ASCII字符串，ZERO是128-bit的值（每位都是0）
+  </p>
+  <p>
+   如果M是一个ASCII字符串，就会被转换为一个字节序列。比如如果M是“MESH”，会被转换成为字节序列：0x4d, 0x45, 0x53, 0x 48。
+  </p>
+  <h5 id="3625-k1-derivatoin-function">
+   3.6.2.5 k1 derivatoin function
+  </h5>
+  <p>
+   The network key material derivation function k1 is used to generate instances of IdentityKey and BeaconKey.
+  </p>
+  <p>
+   这里的key-generation函数使用了MAC函数
+   <mathjax>
+    $AES-CMAC_T$
+   </mathjax>
+   ，在其中使用了一个128-bit的参数 T。
+  </p>
+  <p>
+   <mathjax>
+    $$ k1(N, SALT, P) = AES-CMAC_T (P) $$
+   </mathjax>
+  </p>
+  <p>
+   其中N是0或任意字节，SALT是128bit，P是0或多个字节。
+   <mathjax>
+    $T=AES-CMAC_{SALT} (N)$
+   </mathjax>
+  </p>
+  <h5 id="3626-k2-network-key-material-derivatoin-function">
+   3.6.2.6 k2 network key material derivatoin function
+  </h5>
+  <p>
+   The network key material derivation function k2 is used to generate instances of EncryptionKey, PrivacyKey, and NID for use as Master and Private Low Power node communication.
+  </p>
+  <h5 id="3627-k3-derivation-function">
+   3.6.2.7 k3 derivation function
+  </h5>
+  <p>
+   The derivation function k3 is used to generate a public value of 64 bits derived from a private key.The definition of this derivation function makes use of the MAC function AES-CMACT with a 128-bit key T
+  </p>
+  <h5 id="3628-k4-derivation-function">
+   3.6.2.8 k4 derivation function
+  </h5>
+  <p>
+   The derivation function k4 is used to generate a public value of 6 bits derived from a private key.
+  </p>
+  <p>
+   The definition of this derivation function makes use of the MAC function AES-CMACT with a 128-bit key T.
+  </p>
+  <h4 id="363-sequnce-number">
+   3.6.3 Sequnce number
+  </h4>
+  <p>
+   Sequnce nmber是一个24-bit的值，在网络层PDU的SEQ字段包含了该值，这主要是用来抵御重传攻击的。同一个节点内部的不同element之间可以共享该值也可以不共享。从每个element发出的Network PDU都有着不同的sequnce number可以保证mesh网络的安全性。
+  </p>
+  <p>
+   作为一个24-bit的值，一个element最多可以传递 16777216 条消息在收到nonce之前。如果一个element没5秒钟发送一条喜爱哦戏，这个节点可以传送2.6年在nonce重复之前。
+  </p>
+  <p>
+   每个element应该在Network PDU中使用严格递增的sequence number。在sequnce number到达最大值以前，节点应该使用IV Update 程序更新IV值。
+  </p>
+  <h4 id="364-iv-index">
+   3.6.4 IV index
+  </h4>
+  <p>
+   IV index是一个32-bit的值，这是一个共享的网络资源，一个mesh网络中的所有节点都使用相同的IV值。
+  </p>
+  <p>
+   IV值从0X00000000开始，在IV Update 程序中增加。IV增加的时间不是确切的，因为每个Network PDU都会使用IV的最低位。
+  </p>
+  <h4 id="365-nonce">
+   3.6.5 Nonce
+  </h4>
+  <p>
+   nonce是一个13字节的值，每一个消息的该值都是不一样的。有四种类型的nonce，以其第一个字节的来区分，如下表所示
+  </p>
+  <table>
+   <thead>
+    <tr>
+     <th>
+      Nonce Type
+     </th>
+     <th>
+      Nonce
+     </th>
+     <th>
+      Description
+     </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+     <td>
+      0x00
+     </td>
+     <td>
+      Network nonce
+     </td>
+     <td>
+      Used with an encryption key for network authentication and encryption
+     </td>
+    </tr>
+    <tr>
+     <td>
+      0x01
+     </td>
+     <td>
+      Application nonce
+     </td>
+     <td>
+      Used with an application key for upper transport authentication and encryption
+     </td>
+    </tr>
+    <tr>
+     <td>
+      0x02
+     </td>
+     <td>
+      Device nonce
+     </td>
+     <td>
+      Used with a device key for upper transport authentication and encryption
+     </td>
+    </tr>
+    <tr>
+     <td>
+      0x03
+     </td>
+     <td>
+      Proxy nonce
+     </td>
+     <td>
+      Used with an encryption key for proxy authentication and encryption
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <h4 id="366-keys">
+   3.6.6 Keys
+  </h4>
+  <p>
+   Mesh中定义了两种类型的key：application keys (AppKey)、network keys(NetKey)。AppKey用来在上传输层被使用，NetKeys在网络层被使用。两种类型的Key都可以在节点间共享。还有一种Key是device key(DevKey)，这是一个特殊的application key，每个节点都有一个特有的DevKey，只能被节点本身以及Client Configure所知，用来保护节点和Configureaion Client之间通讯。
+  </p>
+  <p>
+   AppKey是跟NetKey绑定的，这意味着AppKey只能在它所绑定的NetKey的上下文中使用。一个AppKey只能绑定一个NetKey，一个DevKey可以绑定到所有的Netkey上。
+  </p>
+  <p>
+   key的绑定关联关系可以用下图解释：
+  </p>
+  <p>
+   <img alt="" src="pic/pic_key_bind.png"/>
+  </p>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/highlight.min.js">
+  </script>
+  <script>
+   hljs.initHighlightingOnLoad();
+  </script>
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript">
+  </script>
+  <script type="text/javascript">
+   MathJax.Hub.Config({"showProcessingMessages" : false,"messageStyle" : "none","tex2jax": { inlineMath: [ [ "$", "$" ] ] }});
+  </script>
+ </body>
+</html>
