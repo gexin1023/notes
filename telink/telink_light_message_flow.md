@@ -30,6 +30,53 @@ group3地址 -> 0x80 03
 
 APP直连节点时，直接对该节点设置分组情况，add group或者 delete group。
 
+#### PWM控制
+
+灯相关的控制都是是通过`（R, G, B, Lum）`四个变量实现的，表示灯的颜色及亮度。无论是颜色还是亮度都是通过调整相应IO口的PWM波占空比来实现的。PWM波由max_ticks、cmp_ticks两个量控制，max_ticks表示脉冲周期的持续时间，cmp_ticks表示周期内高电平保持时间。在telink灯控示例中，max_ticks保持恒定，PWM波的调整都是通过改变cmp_ticks的值来实现的。
+
+可以简单的这样理解，对于灯的R通道来说，其颜色值R与亮度值Lum得乘积表示cmp_ticks（即占空比），颜色越深或者亮度越大占空比越高。
+
+```
+
+/* 设置PWM占空比 */
+void	pwm_set_lum (int id, u16 y, int pol)
+{
+    u32 lum = ((u32)y * PMW_MAX_TICK) / (255*256);
+
+	pwm_set_cmp (id, pol ? PMW_MAX_TICK - lum : lum);
+}
+
+/* 根据某通道的颜色值及亮度值，计算出占空比 */
+u32 get_pwm_cmp(u8 val, u8 lum){
+    if(lum >= ARRAY_SIZE(rgb_lumen_map) - 1){
+        lum = ARRAY_SIZE(rgb_lumen_map) - 1;
+    }
+    u16 val_lumen_map = rgb_lumen_map[lum];
+    
+#if LIGHT_ADJUST_STEP_EN
+    light_step_correct_mod(&val_lumen_map, lum);
+#endif
+    u32 val_temp = val;
+    return (val_temp * val_lumen_map) / 255;
+}
+
+/* 灯设备R通道设置 */
+void light_adjust_R(u8 val, u8 lum){
+    pwm_set_lum (PWMID_R, get_pwm_cmp(val, lum), 0);
+}
+
+/* 节点灯设备控制 */
+void light_adjust_RGB_hw(u8 val_R, u8 val_G, u8 val_B, u8 lum){
+	light_adjust_R(val_R, lum);
+	light_adjust_G(val_G, lum);
+	light_adjust_B(val_B, lum);
+}
+```
+
+上面灯的控制是立刻生效的，telink还提供了渐变模式，即灯颜色或亮度的变化渐变到目标状态。
+
+渐变控制的生效是在定时器函数`light_onoff_step_timer()`里面实现的，使用一个全局变量`light_step`表示渐变参数，需要改变状态时只需要修改该全局变量的值，定时器会自动扫描该量，然后去生效状态改变。
+
 ### 控制消息结构
 
 
