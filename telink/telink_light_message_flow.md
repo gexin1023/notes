@@ -1,4 +1,4 @@
-## telink_light_message_flow
+## telink-mesh灯控实现
 
 ### mesh 实现方式 
 
@@ -76,6 +76,69 @@ void light_adjust_RGB_hw(u8 val_R, u8 val_G, u8 val_B, u8 lum){
 上面灯的控制是立刻生效的，telink还提供了渐变模式，即灯颜色或亮度的变化渐变到目标状态。
 
 渐变控制的生效是在定时器函数`light_onoff_step_timer()`里面实现的，使用一个全局变量`light_step`表示渐变参数，需要改变状态时只需要修改该全局变量的值，定时器会自动扫描该量，然后去生效状态改变。
+
+####  闹钟(定时)任务
+
+#####  telink-8269中的时间表示
+
+telink-8269中没有rtc硬件模块，系统时间重启后归零。
+
+上电后的时间记录在一个全局变量`rtc`中，在主循环中不断调用 `rtc_run()`函数来根据系统晶振维持时间，时间变量的结构如下：
+
+```
+typedef struct{
+    u16 year;
+    u8 month;
+    u8 day;
+    u8 hour;
+    u8 minute;
+    u8 second;
+    u8 week;
+    u32 tick_last;  //if add element, must after tick_last
+}rtc_t;
+
+rtc_t rtc = {
+    .year = 1970,
+    .month = 1,
+    .day = 1,
+    .hour = 0,
+    .minute = 0,
+    .second = 0,
+    .week = 1,
+};
+```
+
+#####  定时轮询
+telink方案中定时（闹钟)任务最多可以设16个，在一个长度为16的数组全局变量中保存，定时任务的结构如下：
+
+```
+typedef struct{ // max 10BYTES
+    union {
+        u8 event;
+        u8 valid_flag;
+    }par0;
+    u8 index;
+    struct {
+        u8 cmd : 4;
+        u8 type : 3;        
+        u8 enable : 1;         
+    }par1;
+    u8 month;
+    union {
+        u8 day;
+        u8 week;    // BIT(n)
+    }par2;
+    u8 hour;
+    u8 minute;
+    u8 second;
+    u8 scene_id;
+    //u8 alarm total for notiffy
+}alarm_ev_t;
+```
+
+在时间保持函数`rtc_run()`中，会没秒调用一次`rtc_increase_and_check_event()`函数，该函数会调用`alarm_event_check()`，而该函数将当前时间rtc与闹钟任务中的时间做对比，到达定时时间时就会激发相应的操作。
+
+目前的定时任务，只有三种动作：开、关、情景模式生效。
 
 ### 控制消息结构
 
