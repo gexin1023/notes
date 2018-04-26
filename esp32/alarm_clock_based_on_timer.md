@@ -37,15 +37,13 @@ typedef struct
     int     wday;   // day of week，    0xFFFFFFFF表示*，bit[0~6]  表示周一到周日,如周一到周五每天响铃，则0x1F
     int     mday;   // day of month，   0xFFFFFFFF表示*, bit[0~31] 表示1~31日,每月1,3,5号响铃，则0x15
     int     mon;    // month，          0xFFFFFFFF表示*，bit[0~11] 表示1~12月
-} cron_tm_t
+} cron_tm_t;
 
 /* 闹钟任务 */
 typedef struct
 {
 	int             id;         // 任务ID
-	struct tm       tb;         // linux中标准的时间结构体（#include <time.h>），用以表示下一次闹钟激发时间
     cron_tm_t       cron_tm;    // cron格式时间
-	unsigned int    flags;      // 重复类型
 	int             action;     // 响应操作，对于灯控产品来说，action可以表示开关、颜色、场景等等
     TimerHandle_t   xTimer;     // 定时器句柄
     list_node_t     node;       // 节点，用于将一系列定时任务组织成list
@@ -135,8 +133,11 @@ int get_expiry_time(alarm_task_t  *alarm_task)
 ```
 int set_timer(alarm_task_t  *alarm_task)
 {
+    int t = get_expiry_time(alarm_task);
+    if(t <= 0) return -1; // 不需要设置下一次闹钟，不重复的闹钟，且时间已过
+
     alarm_task->xTimer = xTimerCreate( "timer",
-                                        get_expiry_time(tm_task) / portTICK_RATE_MS,
+                                        t / portTICK_RATE_MS,
                                         1,
                                         (void*)alarm_task,
                                         timer_task_callback );
@@ -151,8 +152,8 @@ int set_timer(alarm_task_t  *alarm_task)
         xTimerStart(alarm_task->xTimer, 0);
     }
 
-
     return 0;
 }
 
 ```
+
