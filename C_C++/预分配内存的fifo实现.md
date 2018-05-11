@@ -8,7 +8,7 @@ fifo即先进先出队列，可以用链表来实现，在链表头部插入数�
 有的场景中，要避免频繁的malloc/free动态分配释放，与此同时数据长度不定。因此，需要预分配一段空间存储数据，也需要记录每一个数据的长度，方便存取。
 
 ### fifo数据结构
-```
+```c
 typedef struct
 {
     unsigned int pos;   // position index in buffer
@@ -30,7 +30,7 @@ typedef struct
 
 ### fifo接口
 
-```
+```c
 fifo_t * fifo_init(unsigned char *buf, unsigned int size);
 
 fifo_t *fifo_alloc(unsigned int size);
@@ -64,7 +64,7 @@ int fifo_get_len(fifo_t *fifo);
 
 fifo接口的实现如下：
 
-```
+```c
 
 /* fifo_init:   create a fifo using a preallocated memory
  *
