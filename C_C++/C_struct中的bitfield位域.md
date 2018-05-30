@@ -23,7 +23,7 @@ s1.d = 1;
 
 位域限制对于一些非字节对齐的变量，比较有用。有些标志位使用几个个bit就可以表示，这时可以用位域限制。我们以蓝牙mesh中的Network-PDU为例说明。
 
-![Network_PDU](pic\Network_PDU.png)
+![Network_PDU](./pic/Network_PDU.png)
 
 IVI只占了1 bit，NID占了7bit。我们可以直接用1个字节表示，然后通过移位运算来表示IVI及NID。也可以使用位域，这样表示更加直接，与正常的结构体成员一样。
 
