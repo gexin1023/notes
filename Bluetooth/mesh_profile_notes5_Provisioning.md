@@ -12,7 +12,7 @@ provisioning过程，首先需要在未配网设备和provisioner节点间建立
 
 **Provisioning-bearer**建立后，provisioner与为配网设备间使用Elliptic Curve Diffie-Hellman (ECDH)协议加密。
 
-![prov_protocol-statck](pic\prov_protocol-statck.png)
+![prov_protocol-statck](pic/prov_protocol-statck.png)
 
 
 
@@ -76,7 +76,7 @@ PB_GATT是通过Proxy PDU来provision的bearer，PB-GATT是用来支持那些不
 
 Generic Provisioning PDU包含两部分，一部是Generic Provisioning Control(GPC)field, 紧接着是Generic Provisioning Payload。
 
-![generic_provisioning_pdu](pic\generic_provisioning_pdu.png)
+![generic_provisioning_pdu](pic/generic_provisioning_pdu.png)
 
 Generic ProvisionIng Control field的最低两位包含一个Generic Provisioning Control Format （GPCF）field，该值决定了PDU的类型。
 
@@ -93,7 +93,7 @@ Generic ProvisionIng Control field的最低两位包含一个Generic Provisionin
 
 Transaction Start PDU 用来开始一段分段消息传输，其格式如下：
 
-![transaction_start_pdu](pic\transaction_start_pdu.png)
+![transaction_start_pdu](pic/transaction_start_pdu.png)
 
 
 
@@ -103,7 +103,7 @@ Transaction Start PDU 用来开始一段分段消息传输，其格式如下：
 
 该PDU只包含一个字节，如下所示：
 
-![transaction_acknowledge_pdu](pic\transaction_acknowledge_pdu.png)
+![transaction_acknowledge_pdu](pic/transaction_acknowledge_pdu.png)
 
 
 此时*Generic Provisioning Payload*的长度是0.
@@ -114,7 +114,7 @@ Transaction Start PDU 用来开始一段分段消息传输，其格式如下：
 
 Transaction Continuation PDU用来传输后续的provisioning PDU，其结构如下所示：
 
-![transcation_continuation_pdu](pic\transcation_continuation_pdu.png)
+![transcation_continuation_pdu](pic/transcation_continuation_pdu.png)
 
 SegmentIndex是分段消息的index（从0开始）
 
@@ -128,7 +128,7 @@ Generic Provisioning Payload 包含Provisioning PDU分段索引为SegmentIndex�
 
 Provisioning Bearer Control PDU用来管理bearer上的额对话（session），其格式如下：
 
-![provisioning_berarer_control](pic\provisioning_berarer_control.png)
+![provisioning_berarer_control](pic/provisioning_berarer_control.png)
 
 
 
@@ -140,7 +140,7 @@ Provisioning Bearer Control PDU用来管理bearer上的额对话（session），
 
 Link_Open_message消息的参数是需要建立连接的设备的UUID，如下所示：
 
-![Link_Open_message](pic\Link_Open_message.png)
+![Link_Open_message](pic/Link_Open_message.png)
 
 
 
@@ -148,7 +148,7 @@ Link_Open_message消息的参数是需要建立连接的设备的UUID，如下�
 
 该消息用来响应Link-Open-message，没有参数，只有一个字节，如下所示：
 
-![Link_ACK_message](F:\repo\notes\Bluetooth\pic\Link_ACK_message.png)
+![Link_ACK_message](F:/repo/notes/Bluetooth/pic/Link_ACK_message.png)
 
 
 
@@ -158,7 +158,7 @@ Link_Open_message消息的参数是需要建立连接的设备的UUID，如下�
 
 该消息的参数域描述关闭连接的原因，其结构如下：
 
-![Link_Close_message](pic\Link_Close_message.png)
+![Link_Close_message](pic/Link_Close_message.png)
 
 | Field | Size | Description |
 | - | - |- |
@@ -187,7 +187,7 @@ Link Establishment procedure 用于建立一个对话（session）， 一个对�
 
 连接建立的流程可以用下图表示：
 
-![establish_of_link_provision](pic\establish_of_link_provision.png)
+![establish_of_link_provision](pic/establish_of_link_provision.png)
 
 
 #### Generic Provisioning behavior

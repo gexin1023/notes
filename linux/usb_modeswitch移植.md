@@ -39,12 +39,14 @@ gcc version 6.2.1 20161016 (Linaro GCC 6.2-2016.11)
 
 2. 配置Makefile文件，使用./configure工具，可以使用./configure -h 查看该工具支持的选项。--prefix选项表示安装工具的位置，将工具都安装在“/home/username/USB-4G/install”的位置。
 
-```
+```shell
 ./configure  \
 	--build = arm-linux \
-	--host  = arm-linux-gnueabihf --prefix=/home/username/USB-4G/install \
+	--host  = arm-linux-gnueabihf  \
+	--prefix=/home/username/USB-4G/install \
 	--disable-shared  \
-	--enable-static --disable-udev
+	--enable-static  \
+	--disable-udev
 ```
 
 3. 编译 make

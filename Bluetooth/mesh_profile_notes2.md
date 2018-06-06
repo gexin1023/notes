@@ -45,6 +45,8 @@
 
 当设备被**provisioner**添加到网络时，就成为网络节点。设备的配网过程与传统的蓝牙点对点配对过程不同。设备配网过程是通过**advertising bearer **或者**point-to-point GATT-based bearer**实现的。通过**advertising bearer **配网的过程是被所有节点所支持的，而通过**point-to-point GATT-based bearer**配网允许智能手机这类设备成为配网者（provisioner）。
 
+多个节点配网时，**Provisioner**可以在正在配网节点上设置一个attention 定时器，当设置该定时器设置为非零值时，设备可以向外界表现出其正在配网，比如闪灯、响铃、震动等。当定时器设置时间到达时，设备结束闪灯恢复正常。
+
 ### mesh中的几个概念
 
 mesh网络结构使用以下几个概念：states、messages、bindings、element、addressing、models、publish-subscribe、mesh keys、association。
@@ -151,25 +153,19 @@ element可以报告状态，在插座的例子中，每个插座都可以汇报�
 
 ![ch2_dual-socket_element_struct](pic\ch2_dual-socket_element_struct.png)
 
+### 发布订阅与消息交换
 
+节点产生消息并向特定的地址发布该消息，订阅相应地址的节点会处理消息。
 
+消息可以发往唯一地址、预分配的组地址或者是虚拟地址，消息作为响应消息被发出，也可以作为独立的消息。当作为响应消息被发出时，model将会使用收到消息的源地址作为该响应消息的目的地址。当model传输独立消息时，使用该model的发布地址作为目的地址。每个model都有一个发布地址。
 
+在接收端，每个model都可以订阅一个或多个组地址或是虚拟地址，如果收到消息的目的地址在本model的订阅列表中，就会处理该消息。当消息的目的地址是element的唯一地址时，也会被处理。
 
+model的发布地址和订阅列表时在Model-publication-and-Subscription-List-state中定义的，这个state被Configuration Server Model所管理。
 
+每个消息都是从一个确定的唯一地址发出，而且有一个唯一的序列号用来避免中继攻击。
 
+### 加密安全
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+所有的消息都使用两种类型的秘钥，一种是用来网络层加密的，称之为"NetKey"，一种是应用秘钥，称之为"AppKey"。网络密钥和应用秘钥可以实现敏感消息与非敏感消息的分离。比如，中继节点可以解密网络层消息，而不会影响到应用数据，在智能家居的mesh环境里，一个灯控设备可以中继门锁设备的消息，但是由于没有应用秘钥，所以不会改变门锁消息，故而不会对门锁产生影响。
 
