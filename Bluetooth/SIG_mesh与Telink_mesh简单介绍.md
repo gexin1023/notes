@@ -23,7 +23,7 @@ BLE协议栈 -> **bearer_layer** -> **network_layer** -> **transport_layer** -> 
 
 SIG-mesh的组网由**provision**和**configure**两个动作实现。
 
-provision过程是给节点分配Network_key和IV_Index，该过程将未配网设备加入到网络中，成为网络节点。
+provision过程是给节点分配Network_key、IV_Index、Unicast_address，该过程将未配网设备加入到网络中，成为网络节点。
 
 	SIG_mesh中，mesh网内节点共享相同的Network_key和IV_Index，其中IV_Index每隔30~60分钟会加1，网内节点同步更新IV_Index。
 	一个节点可以配置多个Network_Key，即属于多个子网。
@@ -36,7 +36,7 @@ provision过程是给节点分配Network_key和IV_Index，该过程将未配网�
 
 Configure过程就是配置节点地址及Application_Key。
 
-分配地址过程首先给节点内每个element分配一个unicast_address，根据实际情况分配group_address及virtual_address。
+根据实际情况分配group_address及virtual_address
 
 	element是SIG_mesh中的一个基本概念，举个例子，一个智能插排设备会有六个插座位置，这六个插座位置都可以接收开关消息，而我们需要独立控制每个插座位置，所以不能只给这个插排分配一个unicast_address。要给六个插座位都分配一个唯一的地址。每个插座位就是一个element。可以接收相同消息的单元（这里是插座位），需要分配在不同element种，以便独立控制。
 
