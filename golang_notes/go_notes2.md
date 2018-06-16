@@ -178,3 +178,155 @@ for t := 0.0; t < cycles*2*math.Pi; t += res {
 
 变量的生命周期取决于它是否可以被访问，一个局部变量可以存在于他的代码段之外，所以函数返回局部变量的地址也是安全的。
 
+
+### 2.4 赋值
+
+变量的值是通过赋值语句来更新的，如下所示：
+
+```go 
+x = 1
+*p = true
+person.name = "gexin"
+count[x] = count[x] * scale
+```
+
+跟C语言中一样，以下的形式也是正确的
+
+```go
+count[x] *= 2
+
+v := 1
+v++
+v--
+```
+
+#### 2.4.1 Tuple（元组）赋值
+
+元组赋值是说多个变量同时赋值
+
+```go
+// 交换变量的值
+x, y = y, x
+a[i], a[j] = a[j], a[i]
+```
+
+求两个整数的最大公约数
+```go
+func gdc(x, y int) int {
+	for y != 0{
+		x, y = y, x%y
+	}
+	return x
+}
+```
+
+求第n个菲波那切数列
+
+```go
+func fib(n int) int{
+	x, y := 0, 1
+	for i:=0; i<n; i++{
+		x, y = y, x+y
+	}
+	return x
+}
+```
+
+一些函数需要返回额外的错误码以表明程序执行的状态，比如之前用的到`os.Open()`，这时就需要元组赋值了，如下所示：
+
+```go
+f, err = os.Open("file.txt")
+```
+
+有三个操作符有时也表现出相同的方式，如下所示：
+
+```go
+v, ok = m[key] 		// map lookup
+v, ok = x.(T)		// type assertion
+v, ok = <-ch 		// chanel receive
+```
+就像变量声明一样，我们也可以用下划线来赋值不想用的值，如下所示：
+
+```go
+_, err = io.Copy(dst, src)
+_, ok  = x.(T)
+```
+
+#### 2.4.2 可赋值性
+
+除了显示的赋值，还有很多地方会有隐式赋值。程序调用时，会隐式的给参数变量赋值；程序返回时，隐式的给结果变量赋值；符合结构的数据使用字符常量，默认给每个成员赋值，如下所示：
+
+```go 
+medals := []string{"gold", "silver", "bronze"}
+
+// 对每个元素隐式赋值，相当于如下三个赋值
+medals[0] = "gold"
+medals[1] = "silver"
+medals[2] = "bronze"
+```
+
+一个赋值操作，不管是显式的还是隐式的，只要两侧的类型一致，该操作就是合法的。
+
+两个值是否相等，`==`或者`!=`，与可赋值性相关。在比较操作中，第一个操作数必须可以被第二个的数据类型赋值，反之亦然。
+
+### 2.5 类型声明
+
+变量或者表达式的类型决定了值得表现形式， 比如值得size，如何表示，支持的运算，与之关联的操作方法等等。
+
+```go
+type name underlying_type
+```
+
+一个类型声明定义了一个名为"name"的类型，它与 "underlying_type"有着相同的类型。
+
+```go
+type Celsius  float64
+type student struct {
+	 underlying_type
+	age 	int
+}name string	
+	
+age 	int
+对于每个类型T，都有一个转换操作，T(x)，该操作将x值转换为T类型。转换在以下几种情况下才是允许的：
+
++ x的类型和T都有着相同的"underlying_type"
++ 都是未命名的指针类型，而且指向相同的"underlying_type"数据
++ 虽然改变的类型，但是不影响值得表达
+
+转换在数值类型间是可以转换的，字符串和一些slice类型间也是可以转换的。这些转换可能会影响值得表达，比如将一个float64类型装换为int。
+
+### 2.6 包和文件
+
+go中的pacakge就跟C语言中的库是一样的，包的源码分布在一个或者多个.go文件中，每个包给其中的声明都提供了一个独立的命名空间，比如`utf16.Decode()`与`image.Decode()`就是两个不同的函数。
+
+包用简单的方式决定一个变量是否可以被包外访问，首字母大写的才可以在包外访问，首字母小写的只能在包内访问。
+
+
+我们在这里实现温度转换的例子，该包使用两个文件来实现，一个包用来声明类型、常量等信息，另一个包用来实现方法。
+
+```go 
+// file tempconv.go
+package tempconv
+
+import (
+	"fmt"
+)
+
+type Celsius float64
+type Faherenheit float64
+
+const (
+	AbsoluteZeroC Celsius = -273.15
+	FreezingC     Celsius = 0
+	BoilingC      Celsius = 100
+)
+
+func (c Celsius) String() string     { return fmt.Sprintf("%g°C".c) }
+func (f Faherenheit) String() string { return fmt.Sprintf("%g°F", f) }
+
+// file conv.go
+package tempconv
+
+func CToF(c Celsius) Faherenheit { return Faherenheit(c*9/5 + 32) }
+func FToC(f Faherenheit) Celsius { return Celsius((f - 32) * 5 / 9) }
+```

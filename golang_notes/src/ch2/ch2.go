@@ -4,6 +4,7 @@ package main
 // import other packages
 import (
 	"fmt"
+	"tempconv"
 )
 
 type student struct {
@@ -25,7 +26,7 @@ func main() {
 	gexin := student{name: "gexin", age: 27}
 	p := f1()
 
-	fmt.Println(gexin, x, y, z, dayOfWeek, *p)
+	fmt.Println(gexin, x, y, z, dayOfWeek, *p, tempconv.FreezingC)
 }
 
 func f1() *int {
