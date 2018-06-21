@@ -25,8 +25,12 @@ const (
 func main() {
 	gexin := student{name: "gexin", age: 27}
 	p := f1()
+	var x int8
+	x = -5 % (-3)
 
 	fmt.Println(gexin, x, y, z, dayOfWeek, *p, tempconv.FreezingC)
+
+	fmt.Printf("x: 0b %08b", x)
 }
 
 func f1() *int {
