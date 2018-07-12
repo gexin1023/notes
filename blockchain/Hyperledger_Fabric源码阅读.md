@@ -1,0 +1,65 @@
+# Hyperledger Fabric源码阅读
+
+##  0. 代码结构
+
+- bccsp:  	blockchain cryptographic service provider，提供加密相关的标准及算法
+- bddtests: Behavioral Driven Development (BDD)
+- common
+	- attrmgr: 管理属性所需的包，attributes作为X.509证书的扩展项
+	- capabilities
+	- cauthdsl: 
+	- channelconfig: 顾名思义，配置channel
+	- config: 定义了config接口(没有实现)
+	- configtx
+	- crypto
+	- deliver
+	- errors
+	- flogging
+	- genesis
+	- ledger
+	- localmsp
+	- metadata
+	- metrics
+	- mocks
+	- policies
+	- resourcesconfig
+	- tools
+	- util
+	- viperutil
+- core
+	- aclmgmt
+	- chaincode
+	- comm
+	- committer
+	- common
+	- config
+	- container
+	- deliverservice
+	- endorser
+	- handlers
+	- ledger
+	- mocks
+	- peer
+	- policy
+	- policyprovider
+	- scc
+	- testutil
+	- transaction
+- devenv
+- doc
+- examples
+- gossip
+- idemix
+- images
+- msp
+- orderer
+- peer
+- proposals
+- protos
+- release
+- release_notes
+- sampleconfig
+- scripts
+- test
+- unit-test
+- vendor
